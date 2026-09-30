@@ -28,7 +28,7 @@ This is a personal learning project built with AI-assisted development. The focu
 Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. The bundled demo works without an AI account.
 
 ```sh
-git clone https://github.com/joseneto-qa/qa-test-buddy.git
+git clone https://github.com/josenetoqa/qa-test-buddy.git
 cd qa-test-buddy
 npm ci
 npx playwright install chromium
