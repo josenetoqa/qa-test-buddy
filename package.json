@@ -1,0 +1,17 @@
+{
+  "name": "test-buddy-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local-only test case and automation draft helper",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.cjs",
+    "test:browser": "playwright test --config=test/playwright.config.cjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

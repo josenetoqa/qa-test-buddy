@@ -1,0 +1,183 @@
+{
+  "cases": [
+    {
+      "title": "Create a contact with a valid email",
+      "preconditions": "Use the local demo; each TC has a new browser context.",
+      "steps": [
+        "Reset the demo",
+        "Enter QA Demo and qa@example.com",
+        "Click Create contact",
+        "Verify Contact created"
+      ],
+      "expected": "Contact created",
+      "requirementRef": "Local demonstration fixture",
+      "automation": {
+        "playwright": {
+          "status": "draft",
+          "reason": "Review this controlled demo before execution.",
+          "steps": [
+            {
+              "op": "clickText",
+              "value": "Reset demo"
+            },
+            {
+              "op": "fillLabel",
+              "label": "Full name",
+              "text": "QA Demo"
+            },
+            {
+              "op": "fillLabel",
+              "label": "Email address",
+              "text": "qa@example.com"
+            },
+            {
+              "op": "clickText",
+              "value": "Create contact"
+            },
+            {
+              "op": "expectText",
+              "value": "Contact created"
+            }
+          ]
+        },
+        "cypress": {
+          "status": "draft",
+          "reason": "Review this controlled demo before execution.",
+          "steps": [
+            {
+              "op": "clickText",
+              "value": "Reset demo"
+            },
+            {
+              "op": "fillLabel",
+              "label": "Full name",
+              "text": "QA Demo"
+            },
+            {
+              "op": "fillLabel",
+              "label": "Email address",
+              "text": "qa@example.com"
+            },
+            {
+              "op": "clickText",
+              "value": "Create contact"
+            },
+            {
+              "op": "expectText",
+              "value": "Contact created"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Intentional failure: expect the wrong receipt",
+      "preconditions": "Use the local demo; each TC has a new browser context.",
+      "steps": [
+        "Reset the demo",
+        "Submit a valid email",
+        "Verify the deliberately incorrect Wrong receipt message"
+      ],
+      "expected": "Wrong receipt (intentional failure)",
+      "requirementRef": "Local demonstration fixture",
+      "automation": {
+        "playwright": {
+          "status": "draft",
+          "reason": "Review this controlled demo before execution.",
+          "steps": [
+            {
+              "op": "clickText",
+              "value": "Reset demo"
+            },
+            {
+              "op": "fillLabel",
+              "label": "Email address",
+              "text": "qa@example.com"
+            },
+            {
+              "op": "clickText",
+              "value": "Create contact"
+            },
+            {
+              "op": "expectText",
+              "value": "Wrong receipt"
+            }
+          ]
+        },
+        "cypress": {
+          "status": "draft",
+          "reason": "Review this controlled demo before execution.",
+          "steps": [
+            {
+              "op": "clickText",
+              "value": "Reset demo"
+            },
+            {
+              "op": "fillLabel",
+              "label": "Email address",
+              "text": "qa@example.com"
+            },
+            {
+              "op": "clickText",
+              "value": "Create contact"
+            },
+            {
+              "op": "expectText",
+              "value": "Wrong receipt"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Reject an empty email",
+      "preconditions": "Use the local demo; each TC has a new browser context.",
+      "steps": [
+        "Reset the demo",
+        "Leave Email address empty",
+        "Click Create contact",
+        "Verify Enter an email address"
+      ],
+      "expected": "Enter an email address",
+      "requirementRef": "Local demonstration fixture",
+      "automation": {
+        "playwright": {
+          "status": "draft",
+          "reason": "Review this controlled demo before execution.",
+          "steps": [
+            {
+              "op": "clickText",
+              "value": "Reset demo"
+            },
+            {
+              "op": "clickText",
+              "value": "Create contact"
+            },
+            {
+              "op": "expectText",
+              "value": "Enter an email address"
+            }
+          ]
+        },
+        "cypress": {
+          "status": "draft",
+          "reason": "Review this controlled demo before execution.",
+          "steps": [
+            {
+              "op": "clickText",
+              "value": "Reset demo"
+            },
+            {
+              "op": "clickText",
+              "value": "Create contact"
+            },
+            {
+              "op": "expectText",
+              "value": "Enter an email address"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+node_modules/
+.test-buddy-data/
+.test-buddy-runs/
+.superpowers/
+test-results/
+playwright-report/
+output/
+
+# Local agent sessions and captured browser data
+.playwright-cli/
+.remember/
+.codex/
+.agents/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
