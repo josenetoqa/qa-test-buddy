@@ -1,0 +1,4 @@
+const test=require('node:test');const assert=require('node:assert/strict');const {readResult}=require('../lib/report.cjs');
+const report=(status,title='TC-001 · Workspace')=>JSON.stringify({errors:[],suites:[{specs:[{title,tests:[{results:[{status,duration:25,errors:status==='failed'?[{message:'Expected text missing'}]:[]}]}]}]}]});
+test('a single matching assertion result determines the verdict',()=>{assert.equal(readResult(report('passed'),'TC-001 · Workspace',0).status,'passed');assert.equal(readResult(report('failed'),'TC-001 · Workspace',1).status,'failed');});
+test('zero tests, wrong identity, malformed output and skipped execution never pass',()=>{for(const text of ['{}','garbage',report('passed','Other'),report('skipped')])assert.equal(readResult(text,'TC-001 · Workspace',0).status,'error');assert.equal(readResult(report('passed'),'TC-001 · Workspace',1).status,'error');});

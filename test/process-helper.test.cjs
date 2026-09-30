@@ -1,0 +1,4 @@
+const test=require('node:test');const assert=require('node:assert/strict');const {invoke}=require('../lib/process-helper.cjs');
+test('provider stdout and stderr share one 128 KB bound',async()=>{await assert.rejects(()=>invoke(process.execPath,['-e',"process.stdout.write('x'.repeat(70000));process.stderr.write('y'.repeat(70000));setTimeout(()=>{},2000)"],'',5000),/128 KB/);});
+test('provider exit errors preserve actionable bounded diagnostics',async()=>{await assert.rejects(()=>invoke(process.execPath,['-e',"process.stderr.write('Sign in to the CLI before generation.');process.exit(1)"],'',5000),error=>error.stderr.includes('Sign in')&&error.message.includes('exited'));});
+test('provider deadlines terminate and await the child',async()=>{const started=Date.now();await assert.rejects(()=>invoke(process.execPath,['-e','setInterval(()=>{},100)'],'',40),/too long/);assert.equal(Date.now()-started<3000,true);});

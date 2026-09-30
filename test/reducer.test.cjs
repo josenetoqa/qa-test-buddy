@@ -1,0 +1,10 @@
+const {test}=require('node:test'); const assert=require('node:assert/strict');
+const {reconcileRun}=require('../lib/run-reducer.cjs');
+const args=(overrides={})=>({expectedIds:['a','b'],reportedCases:[{caseId:'a',status:'passed'},{caseId:'b',status:'passed'}],reporterEnded:true,reporterStatus:'passed',processExit:0,...overrides});
+test('zero or missing test results never pass',()=>{assert.equal(reconcileRun(args({reportedCases:[]})).status,'error');assert.equal(reconcileRun(args({reportedCases:[{caseId:'a',status:'passed'}]})).status,'error');});
+test('duplicate identity is a reporting error',()=>assert.equal(reconcileRun(args({reportedCases:[{caseId:'a',status:'passed'},{caseId:'a',status:'passed'}]})).status,'error'));
+test('nonzero process after passes preserves case passes but errors run',()=>{const r=reconcileRun(args({processExit:1}));assert.equal(r.status,'error');assert.equal(r.cases[0].status,'passed');});
+test('mixed failure preserves later independent pass',()=>{const r=reconcileRun(args({reportedCases:[{caseId:'a',status:'failed',error:'assertion'},{caseId:'b',status:'passed'}],reporterStatus:'failed',processExit:1}));assert.equal(r.status,'failed');assert.equal(r.cases[1].status,'passed');});
+test('interrupted cases cancel but completed passes survive',()=>{const r=reconcileRun(args({canceled:true,reportedCases:[{caseId:'a',status:'passed'}],reporterEnded:false,processExit:null}));assert.equal(r.status,'canceled');assert.equal(r.cases[0].status,'passed');assert.equal(r.cases[1].status,'canceled');});
+test('incomplete reporter, timeout and signal do not pass',()=>{for(const change of [{reporterEnded:false},{timedOut:true},{processExit:null}])assert.equal(reconcileRun(args(change)).status,'error');});
+test('reporter/process contradictions are infrastructure errors',()=>{assert.equal(reconcileRun(args({reportedCases:[{caseId:'a',status:'failed'},{caseId:'b',status:'passed'}],reporterStatus:'passed',processExit:0})).status,'error');});
