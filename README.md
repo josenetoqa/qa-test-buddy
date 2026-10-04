@@ -6,6 +6,8 @@ Test Buddy is a local QA workspace that connects manual test design with browser
 
 ![Test Buddy workspace with independent Playwright results](docs/images/workspace.png)
 
+**New here?** Read the [detailed user guide](docs/user-guide.md) for setup, the full workflow, exports, authentication, and troubleshooting.
+
 ## Why I built it
 
 As a manual QA analyst, I wanted one place to organize test cases and explore automation without losing the expected behavior behind each case. Test Buddy keeps manual steps, assertions, execution results, and evidence together. Every generated case has its own identity and Playwright result.
@@ -147,6 +149,7 @@ Runtime data, auth profiles, generated recordings, dependencies, and local agent
 
 ## Documentation
 
+- [Detailed user guide](docs/user-guide.md)
 - [API contract](docs/api-contract.md)
 - [Workspace update and verification](docs/implementation-2026-10-04.md)
 - [Implementation record](docs/implementation-2026-09-29.md)
