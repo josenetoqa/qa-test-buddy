@@ -14,18 +14,19 @@ This is a personal learning project built with AI-assisted development. The focu
 
 ## Features
 
-- **Manual test design:** generate plain-text or BDD cases from requirements.
-- **Independent automation:** review and run one case, selected cases, or all reviewed cases.
+- **Manual test design:** generate plain-text cases from requirements.
+- **Independent automation:** run one case, selected cases, or all runnable cases. Run confirms the displayed actions.
 - **Clear results:** per-case verdicts, expected versus actual behavior, real steps, and assertion errors.
 - **Evidence:** failure screenshots and traces, plus optional recorded video.
 - **Execution controls:** headless or headed Chromium, action delay, cancellation, and reload recovery.
 - **Structured editing:** edit allowlisted actions and exact locators without executing model-written source.
-- **Saved history:** reopen exact suite revisions and export JSON, Markdown, or Playwright code.
+- **Copy and download:** copy each case or the whole suite; download test cases as text and Playwright tests as code.
+- **Saved history:** reopen exact suite revisions and export execution reports as JSON or Markdown.
 - **Local authentication:** explicitly capture an origin-bound login profile for authenticated testing.
 
 ## Quick start
 
-Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. The bundled demo works without an AI account.
+Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. Test Buddy starts Codex with unrelated user MCPs, plugins, and hooks excluded, while retaining your top-level model and reasoning preferences and existing sign-in. Generation is limited to JSON output and has a five-minute deadline for larger suites. Custom Codex providers are not yet supported by this isolated invocation. The bundled demo works without an AI account.
 
 ```sh
 git clone https://github.com/josenetoqa/qa-test-buddy.git
@@ -46,18 +47,37 @@ TEST_BUDDY_DATA_DIR=/absolute/path/to/private-data npm start
 
 ## Test your application
 
-1. Enter your requirements and select plain text or BDD.
+1. Enter your requirements. Cases are always generated in plain text.
 2. Select your installed AI CLI and enable Playwright.
-3. Enter your application's target URL and click **Generate tests**.
+3. Enter your application's target URL and click **Generate tests**. With Playwright selected, Test Buddy first reads visible field labels, placeholder text, button names, and form scopes and includes them in the AI request. Input values, cookies, and login tokens are excluded. Inspection uses a fresh browser session, so use a page accessible without login. It does not click controls or inspect later interaction states. Unlabeled fields can use exact placeholder locators scoped to their observed form, keeping repeated login and registration fields separate.
 4. Check the manual cases, locators, and assertions. Edit actions or check locator matches if needed.
-5. Mark the cases reviewed, then run one, selected cases, or all reviewed cases.
+5. Open the collapsed **Playwright code** preview, then run one case, selected cases, or all runnable cases. Clicking Run confirms the displayed actions; a separate Mark reviewed step is not needed.
 6. Inspect the result panel and export the report or evidence.
 
-Changing the requirements, URL, format, or framework blocks the previous suite until you generate again. A failed generation never falls back to the demo. Saved suites restore their original inputs.
+Configure, Test review, and Results form one page. Generation scrolls to Test review, and execution scrolls to Results. Use **Jump to case** to navigate the automation list or **Collapse code** to close previews. Selecting cases keeps your scroll position and open previews.
+
+Changing the requirements, URL, or Playwright selection blocks execution of the previous suite. **Use suite inputs** restores its saved inputs; generate again to use your changes. A failed generation never falls back to the demo. Saved suites restore their original inputs.
+
+### Edit actions and inspect failures
+
+The action editor shows only fields used by the selected operation. **Save actions** creates a new revision and updates its code. Save or cancel the editor before running; **Continue editing** links to the open editor when other controls are blocked.
+
+**Check locators** probes the initial page without clicking or filling. Missing controls after a planned interaction are marked **deferred**, which means that state is still unverified. Results stay visible when selecting cases.
+
+Failed cases show the Playwright error and failed step in the Test cases and Playwright tabs. **View execution results** links to the run details. Started and Finished use the browser's local time zone; completed runs with missing timestamps show a dash.
+
+### Copy and download tests
+
+- **Copy case** copies only that card's title, preconditions, numbered steps, expected result, and requirement. **Copy cases** copies the whole suite.
+- **Download test cases (.txt)** includes every manual case, including blocked/manual-only cases.
+- **Download Playwright tests (.spec.cjs)** exports runnable mappings as independent tests in one file.
+- **Download this test**, inside an open code preview, exports one Playwright test. **Copy code** copies its source.
+
+Downloads use the displayed saved revision and work before execution. No runnable mappings means no Playwright download is available. To run downloaded code elsewhere, use a project with `@playwright/test` and Chromium installed. The file retains its target URLs and test data; it does not include a captured login profile.
 
 ### Try the local demo
 
-Click **Try the local Playwright demo**. It loads three independent cases against a bundled contact form: **pass, intentional failure, pass**. Review them and run the suite. The intentional failure shows how assertion errors and evidence appear; it is not a regression in the verification suite.
+Click **Try the local Playwright demo**. It loads three independent cases against a bundled contact form: **pass, intentional failure, pass**. Inspect the code and run the suite. The intentional failure shows how assertion errors and evidence appear; it is not a regression in the verification suite.
 
 ### Authentication and evidence
 
@@ -76,7 +96,7 @@ Headed mode opens a separate local browser. Screenshots and video are captured e
 ```text
 Requirements + target URL
           ↓
-Configured AI CLI → structured case mappings
+Initial-page inspection + configured AI CLI → structured case mappings
           ↓
 Canonical suite → human review → immutable revision
           ↓
@@ -121,13 +141,14 @@ The standalone Playwright suite tests valid, empty, and invalid email behavior i
 
 ## Privacy
 
-Your selected AI CLI sends requirements to its configured provider. Do not include secrets in requirements. Login profiles stay local, but test values, screenshots, traces, and videos may contain account data. Review evidence before sharing. Deleting a local profile does not revoke sessions at the target service.
+Your selected AI CLI sends requirements and inspected visible control metadata to its configured provider. Do not include secrets in requirements. Login profiles stay local, but test values, screenshots, traces, and videos may contain account data. Review evidence before sharing. Deleting a local profile does not revoke sessions at the target service.
 
 Runtime data, auth profiles, generated recordings, dependencies, and local agent sessions are excluded from Git. The README image shows only the controlled local demo.
 
 ## Documentation
 
 - [API contract](docs/api-contract.md)
+- [Workspace update and verification](docs/implementation-2026-10-04.md)
 - [Implementation record](docs/implementation-2026-09-29.md)
 - [Execution design](docs/superpowers/specs/2026-09-29-playwright-execution-design.md)
 - [Implementation plan](docs/superpowers/plans/2026-09-29-playwright-execution-plan.md)
