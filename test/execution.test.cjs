@@ -40,9 +40,9 @@ test('real UI runs each demo TC separately and retains its own pass/fail verdict
     await page.locator('#demo-button').click();
     await page.locator('#automation-pane .case-card').first().waitFor();
     assert.equal(await page.locator('#automation-pane .case-card').count(), 3);
-    assert.equal(await page.getByRole('button', { name: 'Run all reviewed', exact: true }).isDisabled(), true);
-    for (let i = 0; i < 3; i++) { await page.getByRole('button', { name: 'Mark reviewed', exact: true }).first().click(); await page.waitForFunction(expected => document.querySelectorAll('#automation-pane .case-status').length && [...document.querySelectorAll('#automation-pane .case-status')].filter(el => el.textContent.startsWith('ready')).length === expected, i + 1); }
-    await page.getByRole('button', { name: 'Run all reviewed', exact: true }).click();
+    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === 'Run all runnable' && !b.disabled));
+    assert.equal(await page.getByRole('button', { name: 'Run all runnable', exact: true }).isEnabled(), true);
+    await page.getByRole('button', { name: 'Run all runnable', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('#coverage-summary').textContent.includes('2 of 3 selected cases passed'), undefined, { timeout: 45000 });
     await page.waitForFunction(() => document.querySelector('#run-status').textContent === 'failed');
     const results = await page.locator('#automation-pane .case-verdict').evaluateAll(elements => elements.map(el => ({ id: el.dataset.caseId, status: el.dataset.status, text: el.textContent })));
@@ -60,9 +60,9 @@ test('real UI runs each demo TC separately and retains its own pass/fail verdict
     await page.locator('[data-tab=playwright]').press('ArrowLeft');
     assert.equal(await page.locator('[data-tab=cases]').getAttribute('aria-selected'), 'true');
     await page.locator('[data-tab=playwright]').click();
-    assert.equal(await page.getByRole('button', { name: 'Run all reviewed', exact: true }).isEnabled(), true);
+    assert.equal(await page.getByRole('button', { name: 'Run all runnable', exact: true }).isEnabled(), true);
     await page.locator('[data-tab=cases]').click();
-    assert.equal(await page.evaluate(() => document.querySelector('#run-result').getBoundingClientRect().top < 1100), true);
+    assert.equal(await page.locator('#run-result').isVisible(), true);
     const artifactRoot = process.env.QA_SCREENSHOTS;
     if (artifactRoot) await page.screenshot({ path: path.join(artifactRoot, 'real-demo-desktop.png'), fullPage: true });
     for (const width of [375, 768]) {

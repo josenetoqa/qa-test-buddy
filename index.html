@@ -11,41 +11,46 @@
   <header class="topbar"><a class="brand" href="/" aria-label="Test Buddy home"><span class="brand-mark">TB</span><span>Test Buddy</span></a><span class="local-badge"><i></i> LOCAL WORKSPACE</span></header>
   <main class="layout">
     <section class="intro"><div><p class="eyebrow">TEST BUDDY / WORKSPACE</p><h1>From requirements to results.</h1><p class="subtitle">Create your test cases, review the automation, and inspect what actually happened.</p></div></section>
+    <nav class="workflow-nav" aria-label="Workspace sections">
+      <a href="#configure"><span>01</span> Configure</a>
+      <a href="#test-review"><span>02</span> Test review</a>
+      <a href="#run-result"><span>03</span> Results</a>
+    </nav>
     <p id="workspace-notice" role="status" class="workspace-notice"></p>
     <div class="workspace">
-      <section class="panel configure">
-        <div class="panel-heading"><div><span class="section-number">01 / CONFIGURE</span><h2>Describe the test</h2></div><span class="sparkle">✳</span></div>
+      <section id="configure" class="panel configure" aria-labelledby="configure-heading">
+        <div class="panel-heading"><div><span class="section-number">01 / CONFIGURE</span><h2 id="configure-heading">Configure your tests</h2><p class="section-description">Start with the behavior you want to check, then choose how to generate your cases.</p></div><span class="sparkle">✳</span></div>
         <form id="generate-form">
-          <label for="requirements">Test requirements <span class="required">*</span></label>
+          <div class="requirements-column"><label for="requirements">Test requirements <span class="required">*</span></label>
           <textarea id="requirements" required maxlength="20000" placeholder="Describe the feature, acceptance criteria, and ticket context..."></textarea>
           <p class="helper">Add ticket context and acceptance criteria here. Be specific about expected behavior.</p>
-          <div class="form-grid">
-            <div class="field"><label for="format">Test case format</label><select id="format"><option value="bdd">BDD · Given / When / Then</option><option value="plain">Plain text</option></select></div>
-            <div class="field"><label for="provider">AI CLI</label><select id="provider" required><option value="">Checking installed CLIs…</option></select></div>
+          </div><div class="settings-column"><div class="form-grid">
+            <div class="field"><label for="provider">AI CLI</label><select id="provider" required><option value="">Checking installed CLIs…</option></select><p class="helper">Test cases are generated in plain text.</p></div>
           </div>
-          <div class="field"><label>Automation frameworks <span class="optional">OPTIONAL</span></label><div class="framework-grid"><label class="framework-card"><input type="checkbox" name="framework" value="playwright"><span class="framework-icon pw">P</span><span><strong>Playwright</strong><small>Browser automation</small></span><span class="checkmark"></span></label><label class="framework-card"><input type="checkbox" name="framework" value="cypress"><span class="framework-icon cy">C</span><span><strong>Cypress</strong><small>Browser automation</small></span><span class="checkmark"></span></label></div></div>
-          <div class="field" id="url-field" hidden><label for="target-url">Target page URL <span class="required">*</span></label><input id="target-url" type="url" placeholder="https://your-app.example.com"><p class="helper">Needed to generate automation steps for this page.</p></div>
-          <details class="workspace-options"><summary>Execution options</summary><label for="run-mode">Browser mode</label><select id="run-mode"><option value="headless">Headless</option><option value="headed">Show local browser</option></select><p class="helper">Show browser opens a separate window on this computer.</p><label for="slow-mo">Action delay (0–500 ms)</label><input id="slow-mo" type="number" min="0" max="500" value="0"><label class="inline-check"><input id="record-video" type="checkbox"> Record video</label><label for="auth-profile">Authentication</label><select id="auth-profile"><option value="">No authentication profile</option></select><p class="helper">Screenshots, videos, and traces may contain private page data. Review evidence before sharing it.</p></details><div class="status-note"><span class="info-icon">i</span><span id="capability-note">Checking available local tools…</span></div>
-          <button class="primary-button" id="generate-button" type="submit"><span>Generate tests</span><span aria-hidden="true">→</span></button>
-          <p id="readiness" class="helper"></p><button id="refresh-readiness" class="text-button" type="button">Recheck local tools</button><button class="text-button" id="demo-button" type="button">Try the local Playwright demo</button>
-          <p class="privacy-note"><span>▣</span> Codex can inspect files allowed by its read-only sandbox. The selected CLI may send your requirements to its configured AI provider. Don’t paste secrets.</p>
+          <div class="field"><label>Automation <span class="optional">OPTIONAL</span></label><div class="framework-grid"><label class="framework-card"><input type="checkbox" name="framework" value="playwright"><span class="framework-icon pw">P</span><span><strong>Playwright</strong><small>Browser automation</small></span><span class="checkmark"></span></label></div></div>
+          <div class="field" id="url-field" hidden><label for="target-url">Target page URL <span class="required">*</span></label><input id="target-url" type="url" placeholder="https://your-app.example.com"><p class="helper">Playwright inspects visible fields and buttons before generation. Use a page accessible without login.</p></div>
+          </div><div class="configure-actions"><details class="workspace-options"><summary>Execution options</summary><label for="run-mode">Browser mode</label><select id="run-mode"><option value="headless">Headless</option><option value="headed">Show local browser</option></select><p class="helper">Show browser opens a separate window on this computer.</p><label for="slow-mo">Action delay (0–500 ms)</label><input id="slow-mo" type="number" min="0" max="500" value="0"><label class="inline-check"><input id="record-video" type="checkbox"> Record video</label><label for="auth-profile">Authentication</label><select id="auth-profile"><option value="">No authentication profile</option></select><p class="helper">Screenshots, videos, and traces may contain private page data. Review evidence before sharing it.</p></details><div class="status-note"><span class="info-icon">i</span><span id="capability-note">Checking available local tools…</span></div>
+          <div class="generation-actions"><button class="primary-button" id="generate-button" type="submit"><span>Generate tests</span><span aria-hidden="true">→</span></button><button class="text-button" id="demo-button" type="button">Try the local Playwright demo</button></div>
+          <div class="readiness-actions"><p id="readiness" class="helper"></p><button id="refresh-readiness" class="text-button" type="button">Recheck local tools</button></div>
+          <p class="privacy-note"><span>▣</span> Codex can inspect files allowed by its read-only sandbox. The selected CLI may send your requirements and inspected field labels, placeholders, and button names to its configured AI provider. Don’t paste secrets.</p>
+          </div>
         </form>
       </section>
-      <section class="panel results" aria-live="polite">
-        <div class="panel-heading"><div><span class="section-number">02 / RESULTS</span><h2>Test review</h2></div><span id="result-count" class="result-count">No cases yet</span></div>
-        <div id="empty-state" class="empty-state"><div class="empty-symbol" aria-hidden="true">✓</div><h3>A clear place for every test.</h3><p>Add your requirements on the left. Your cases and automation will appear here for review.</p><div class="empty-guide"><span>1. Describe</span><span>2. Review</span><span>3. Run &amp; inspect</span></div></div>
-        <div id="loading-state" class="loading-state" hidden><div class="spinner"></div><h3>Building your test cases</h3><p id="loading-copy">Sending requirements to the selected CLI…</p></div>
+      <section id="test-review" class="panel results" aria-labelledby="review-heading" aria-live="polite">
+        <div class="panel-heading"><div><span class="section-number">02 / TEST REVIEW</span><h2 id="review-heading">Review before you run</h2><p class="section-description">Check the cases, review the automation, and choose what to run.</p></div><span id="result-count" class="result-count">No cases yet</span></div>
+        <div id="empty-state" class="empty-state"><div class="empty-symbol" aria-hidden="true">✓</div><h3>A clear place for every test.</h3><p>Add your requirements in Configure above. Your cases and automation will appear here for review.</p><div class="empty-guide"><span>1. Describe</span><span>2. Review</span><span>3. Run &amp; inspect</span></div></div>
+        <div id="loading-state" class="loading-state" hidden><div class="spinner"></div><h3>Building your test cases</h3><p id="loading-copy">Inspecting the page when Playwright is selected, then generating test cases. Larger suites can take several minutes…</p></div>
         <div id="error-state" class="error-state" hidden><div class="error-icon">!</div><h3>Generation needs attention</h3><p id="error-copy"></p><button class="text-button" id="retry-button">Try again</button></div>
         <div id="generated-state" hidden>
           <div class="generated-meta"><span class="success-dot"></span><span id="generated-by">Generated locally</span><button class="text-button" id="copy-button">Copy cases</button></div>
-          <button id="export-code" class="text-button" type="button">Export suite code</button><div class="tabs" role="tablist"><button class="tab active" data-tab="cases" role="tab">Test cases <span id="case-tab-count">0</span></button><button class="tab" data-tab="playwright" role="tab" hidden>Playwright</button><button class="tab" data-tab="cypress" role="tab" hidden>Cypress</button></div>
+          <div class="suite-exports" aria-label="Download saved tests"><div class="export-buttons"><button id="export-cases" class="secondary-button" type="button">Download test cases (.txt)</button><button id="export-code" class="secondary-button" type="button">Download Playwright tests (.spec.cjs)</button></div><p id="export-note" class="helper"></p><p class="suite-export-feedback" role="status"></p></div><div class="tabs" role="tablist"><button class="tab active" data-tab="cases" role="tab">Test cases <span id="case-tab-count">0</span></button><button class="tab" data-tab="playwright" role="tab" hidden>Playwright</button></div>
           <div id="cases-pane" class="tab-pane"></div>
           <div id="automation-pane" class="tab-pane" hidden></div>
 
         </div>
       </section>
     <section id="run-result" class="run-result" aria-labelledby="run-heading" aria-live="polite">
-      <div class="run-top"><div><p class="eyebrow">EXECUTION RESULT</p><h2 id="run-heading">Your next run starts here</h2></div><span id="run-status" class="status-pill">Not run</span></div>
+      <div class="run-top"><div><p class="eyebrow">03 / RESULTS</p><h2 id="run-heading">Your next run starts here</h2></div><span id="run-status" class="status-pill">Not run</span></div>
       <p id="batch-note" class="automation-note"></p>
       <p id="coverage-summary" class="automation-note"></p>
       <button id="cancel-run" class="secondary-button" type="button" hidden>Cancel run</button><p id="run-summary">Review an automation draft, then run it to see its real status and output.</p>
