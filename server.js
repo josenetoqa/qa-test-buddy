@@ -15,7 +15,7 @@ const { checkReadiness } = require('./lib/readiness.cjs');
 const { verifyLocators } = require('./lib/locator-verifier.cjs');
 const { createArtifactStore } = require('./lib/artifacts.cjs');
 const { createHistoryStore } = require('./lib/history-store.cjs');
-const { exportRun, exportSuiteCode } = require('./lib/export.cjs');
+const { exportRun, exportSuiteCode, exportSuiteCases } = require('./lib/export.cjs');
 const { createAuthProfiles } = require('./lib/auth-profiles.cjs');
 
 
@@ -318,7 +318,11 @@ const server = http.createServer(async (req, res) => {
       }
       if (req.method === 'GET' && suiteMatch[2] === 'export') {
         const suite = getSuite(id, revision); if (!suite) return send(res, 404, { error: 'Suite revision not found.' });
-        return sendExport(res, exportSuiteCode(suite, url.searchParams.get('caseId') || undefined), 'test-buddy.spec.cjs');
+        const format=url.searchParams.get('format')||'playwright';
+        if(format==='text')return sendExport(res,exportSuiteCases(suite),`test-cases-r${suite.revision}.txt`);
+        if(format!=='playwright')return send(res,400,{error:'Choose text or playwright for suite export.'});
+        const caseId=url.searchParams.get('caseId')||undefined,item=caseId?suite.cases.find(c=>c.caseId===caseId):null;
+        return sendExport(res,exportSuiteCode(suite,caseId),`${item?.displayId||'playwright-tests'}-r${suite.revision}.spec.cjs`);
       }
       if (req.method === 'PATCH' && suiteMatch[2] === 'review') {
         const body = await readJson(req); if (body.reviewed !== true) return send(res, 400, { error: 'Confirm the actions and assertions were reviewed.' });
