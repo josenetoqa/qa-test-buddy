@@ -116,3 +116,38 @@ test("Claude error flag is reported when the CLI also exits with a failure", asy
     (error) => error.status === 502 && /Invalid API key/.test(error.message),
   );
 });
+
+test("Claude runs without tools, personal customizations, or a saved session", async (t) => {
+  // This fake CLI answers with the arguments it was started with.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "tb-fake-cli-"));
+  fs.writeFileSync(
+    path.join(dir, "claude"),
+    `#!${process.execPath}\n` +
+      "process.stdin.resume();process.stdin.on('end',()=>{" +
+      "process.stdout.write(JSON.stringify({type:'result',is_error:false," +
+      "result:JSON.stringify({schemaVersion:2,cases:[],argv:process.argv.slice(2)})}));});",
+    { mode: 0o700 },
+  );
+  const savedPath = process.env.PATH;
+  process.env.PATH = dir;
+  t.after(() => {
+    process.env.PATH = savedPath;
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+  const { argv } = await callProvider(
+    "prompt",
+    { provider: "claude" },
+    { timeoutMs: 10000 },
+  );
+  assert.ok(argv.includes("-p"));
+  // An empty tool list: the answer is data, never an action.
+  assert.equal(argv[argv.indexOf("--tools") + 1], "");
+  for (const flag of [
+    "--safe-mode",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+  ])
+    assert.ok(argv.includes(flag), `missing ${flag}`);
+  // --bare would also isolate the call, but it ignores the normal sign-in.
+  assert.ok(!argv.includes("--bare"));
+});

@@ -28,7 +28,7 @@ This is a personal learning project built with AI-assisted development. The focu
 
 ## Quick start
 
-Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. Test Buddy starts Codex with unrelated user MCPs, plugins, and hooks excluded, while retaining your top-level model and reasoning preferences and existing sign-in. Generation is limited to JSON output and has a five-minute total deadline, including inspection and at most one repair request. Custom Codex providers are not yet supported by this isolated invocation. The bundled demo works without an AI account.
+Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. Test Buddy starts Codex with unrelated user MCPs, plugins, and hooks excluded, while retaining your top-level model and reasoning preferences and existing sign-in. Claude runs in its safe mode: your personal `CLAUDE.md`, skills, plugins, hooks, and MCP servers are left out, no tools are available, and the request is not saved as a session, while your sign-in and model selection still apply. This needs a Claude CLI version that supports `--safe-mode`. Generation is limited to JSON output and has a five-minute total deadline, including inspection and at most one repair request. Custom Codex providers are not yet supported by this isolated invocation. The bundled demo works without an AI account.
 
 ```sh
 git clone https://github.com/josenetoqa/qa-test-buddy.git

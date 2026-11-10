@@ -102,7 +102,7 @@ Initial inspection uses a fresh anonymous session. For authenticated or later st
 
 The provider returns structured cases and operations. Test Buddy validates them and compiles supported operations into Playwright source. It does not execute arbitrary source returned by the model. A case can remain blocked or manual-only when there is no usable automation mapping.
 
-Generation has a **five-minute total deadline**, including initial inspection and a maximum of one targeted repair request. Codex runs with unrelated user MCP servers, plugins, and hooks excluded. It retains supported top-level model and reasoning settings and the existing sign-in. Custom Codex providers are currently unsupported by this isolated invocation.
+Generation has a **five-minute total deadline**, including initial inspection and a maximum of one targeted repair request. Codex runs with unrelated user MCP servers, plugins, and hooks excluded. It retains supported top-level model and reasoning settings and the existing sign-in. Custom Codex providers are currently unsupported by this isolated invocation. Claude runs in its safe mode, so your personal `CLAUDE.md`, skills, plugins, hooks, and MCP servers cannot change the generated cases. It has no tools, the request is not saved as a session, and your sign-in and model selection still apply.
 
 If generation fails, the interface shows the failure. It does not silently substitute demo cases or reuse an earlier suite as the new result.
 
