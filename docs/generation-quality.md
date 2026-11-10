@@ -63,6 +63,14 @@ npm run benchmark:generation -- --live --provider codex --output /tmp/test-buddy
 
 This sends only synthetic manual-test requirements, not project credentials or account data. It makes no browser visits. Reports include initial and repaired provider outputs, timing, structural validity, requirement mapping, and a human-review checklist. Existing report files are not overwritten.
 
+Measure Playwright mappings against the bundled demo page:
+
+```sh
+npm run benchmark:generation -- --live --playwright --provider codex --output /tmp/test-buddy-playwright.json
+```
+
+This serves a local copy of the demo contact form on a loopback port, inspects it with Chromium, and sends three made-up requirement sets plus the observed control metadata to the provider. The report counts cases that are **not blocked**, blocked, and manual-only, lists every blocked reason, and records the number of provider calls and repair requests. "Not blocked" means the mapping passed structural checks. The benchmark does not execute the cases, so it does not show that they pass or that they prove a requirement. One page and three scenarios cannot describe other applications.
+
 Compare repeated runs using the same corpus, provider settings, and machine conditions. Check coverage and review effort before claiming a faster prompt is better. Structural checks cannot judge business semantics by themselves.
 
 ## Verification snapshot — October 8, 2026

@@ -191,4 +191,47 @@ const liveInputs = [
     },
   },
 ];
-module.exports = { corpus, liveInputs };
+// Made-up requirements for the bundled demo page (demo/index.html).
+// The benchmark fills in the target URL of its own local copy of that page.
+const playwrightInputs = [
+  {
+    id: "demo-contact-messages-known",
+    input: {
+      requirements:
+        "The contact form creates a contact from a full name and an email address. It shows a status message after Create contact is clicked.",
+      format: "plain",
+      context: {
+        acceptanceCriteria:
+          'Submitting a valid email address shows "Contact created".\nSubmitting without an email address shows "Enter an email address".\nSubmitting an email address without an @ sign shows "Enter a valid email address".',
+        testData:
+          "Valid contact: Ana Lima, ana.lima@example.com. Invalid email address: ana.lima.example.com.",
+      },
+    },
+  },
+  {
+    id: "demo-contact-messages-unknown",
+    input: {
+      requirements:
+        "The contact form requires a valid email address before it creates a contact.",
+      format: "plain",
+      context: {
+        acceptanceCriteria:
+          "A contact with a valid email address is created.\nA contact without an email address is rejected.\nA contact with an invalid email address is rejected.",
+      },
+    },
+  },
+  {
+    id: "demo-contact-reset",
+    input: {
+      requirements:
+        "Reset demo clears the Full name and Email address fields and removes the status message.",
+      format: "plain",
+      context: {
+        acceptanceCriteria:
+          "After Reset demo, the Full name field is empty.\nAfter Reset demo, the Email address field is empty.",
+        testData: "Full name: Ana Lima. Email address: ana.lima@example.com.",
+      },
+    },
+  },
+];
+module.exports = { corpus, liveInputs, playwrightInputs };
