@@ -63,13 +63,17 @@ The page has three main sections: **Configure**, **Test review**, and **Results*
 
 | Setting | What to enter or select |
 | --- | --- |
-| Test requirements | The behavior, preconditions, inputs, and expected outcomes you want to test. |
-| AI CLI | An installed and authenticated Codex or Claude CLI. |
-| Playwright | Enable this when you want browser automation in addition to manual cases. |
+| What do you want to test? | The behavior, preconditions, inputs, and expected outcomes you want to test. Use the writing outline if the field is empty. |
+| Generate with | An installed and authenticated Codex or Claude CLI, using its configured model. |
+| Choose your output | Keep Manual test cases selected, or choose Add Playwright for browser automation drafts as well. |
 | Target URL | The initial page to inspect and test. Required for Playwright generation. |
 | Execution options | Browser visibility, action delay, video recording, and an optional authentication profile. |
 
 Cases use plain text. There is no format selector or Cypress option in the interface.
+
+The **Your setup** summary shows the selected output and target, explains missing inputs or tools, and keeps **Generate tests** nearby on desktop. Invalid target URLs are explained beside the URL field. Switching output keeps your requirements and optional context. The writing outline never replaces existing text.
+
+**Optional test context**, **Capture page states**, and **Execution options** expand only when you need them. Closing a section preserves its values. Execution options includes a link to manage saved login profiles. On narrow screens, the setup summary follows the form in a single column.
 
 Write requirements that describe observable behavior. For example, a requirement for a contact form might be:
 
@@ -83,19 +87,22 @@ Start each case with the form reset.
 
 This is an example, not an assumption about your application. Use its actual rules and exact messages when you know them. Do not put passwords, tokens, or other secrets in requirements.
 
-Click **Generate tests** to begin. The page scrolls to **Test review**. If you change the requirements, URL, or Playwright selection afterward, the previous suite cannot run against those changed inputs. Choose **Use suite inputs** to restore its saved configuration, or generate a new suite for the new configuration.
+Click **Generate tests** to begin. Progress and errors appear next to the button; **View progress & controls** takes you to Test review to cancel or reconnect. When generation finishes, use **Review generated cases** to continue. Generation does not run the tests. If you change the requirements, URL, or Playwright selection afterward, the previous suite cannot run against those changed inputs. Choose **Use suite inputs** to restore its saved configuration, or generate a new suite for the new configuration.
 
 ## Understand generation
+
+The [generation quality guide](generation-quality.md) covers requirement context, per-case regeneration, progress/cancel/reconnect, cached inspection, page-state capture, metrics, and benchmarks.
+
 
 With Playwright enabled, Test Buddy first opens the target in a fresh Chromium session. It inspects a limited set of visible control metadata, including labels, placeholders, button names, input types, and form scopes. It then sends the requirements and this metadata to the selected AI CLI.
 
 The inspector does not click controls or fill fields. It does not collect input values, cookies, login tokens, or the full page content. It only observes the initial page, so it cannot establish what appears after submitting a form or opening a dialog.
 
-Generation inspection does not use saved authentication profiles. The initial page must be accessible in a fresh session. A profile selected for execution does not make a private generation target accessible.
+Initial inspection uses a fresh anonymous session. For authenticated or later states, explicitly open a controlled page capture with an optional local login profile. Navigate manually, describe setup steps, capture controls, and select the snapshot for generation. Missing inspection does not prevent manual case generation; automation without observed controls is blocked.
 
 The provider returns structured cases and operations. Test Buddy validates them and compiles supported operations into Playwright source. It does not execute arbitrary source returned by the model. A case can remain blocked or manual-only when there is no usable automation mapping.
 
-The CLI has a **five-minute deadline**. Initial-page inspection happens separately and can add time before that deadline starts. Codex runs with unrelated user MCP servers, plugins, and hooks excluded. It retains supported top-level model and reasoning settings and the existing sign-in. Custom Codex providers are currently unsupported by this isolated invocation.
+Generation has a **five-minute total deadline**, including initial inspection and a maximum of one targeted repair request. Codex runs with unrelated user MCP servers, plugins, and hooks excluded. It retains supported top-level model and reasoning settings and the existing sign-in. Custom Codex providers are currently unsupported by this isolated invocation.
 
 If generation fails, the interface shows the failure. It does not silently substitute demo cases or reuse an earlier suite as the new result.
 
@@ -217,7 +224,7 @@ Execution reports reference evidence on the local Test Buddy server. Those links
 
 The capture session expires after five minutes. Unknown, expired, or wrong-origin profiles cannot be used. If the target service expires your login, capture a new session.
 
-Profiles apply to execution. Initial-page inspection during generation still uses a fresh session without the saved profile. Login state is stored privately on your computer and is excluded from AI prompts, reports, and Git. Deleting a profile removes the local copy; it does not revoke sessions at the target service.
+Profiles apply to execution and explicitly opened page captures. Automatic initial-page inspection still uses a fresh session without the saved profile. Login state is stored privately on your computer and is excluded from AI prompts, reports, and Git. Deleting a profile removes the local copy; it does not revoke sessions at the target service.
 
 ## Reopen runs and revisions
 

@@ -70,7 +70,8 @@ test('real UI runs each demo TC separately and retains its own pass/fail verdict
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
       if (artifactRoot) await page.screenshot({ path: path.join(artifactRoot, `real-demo-${width}.png`), fullPage: true });
     }
-    await page.route('**/api/generate', route => route.fulfill({ json: { schemaVersion: 2, suiteId: 'manual-fixture', revision: 1, provider: 'codex', cases: [{ caseId: 'manual-case', displayId: 'TC-001', automation: {}, title: 'Manual case', preconditions: 'None', steps: ['Check manually'], expected: 'Confirmed by a person', requirementRef: 'Manual' }], automation: {} } }));
+    const manualSuite = { schemaVersion: 2, suiteId: 'manual-fixture', revision: 1, provider: 'codex', cases: [{ caseId: 'manual-case', displayId: 'TC-001', automation: {}, title: 'Manual case', preconditions: 'None', steps: ['Check manually'], expected: 'Confirmed by a person', requirementRef: 'R1' }], automation: {} };
+    await page.route(/\/api\/generations(?:\/manual-generation)?$/, route => route.fulfill({ json: route.request().method() === 'POST' ? {generationId:'manual-generation',status:'running'} : {generationId:'manual-generation',status:'completed',suite:manualSuite} }));
     await page.locator('#requirements').fill('A manual-only case to check stale result cleanup.');
     await page.locator('input[value=playwright]').uncheck();
     await page.locator('#generate-button').click();

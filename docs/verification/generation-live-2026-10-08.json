@@ -1,0 +1,530 @@
+{
+  "mode": "live-provider-manual-only",
+  "provider": "codex",
+  "providerInvoked": true,
+  "browserNavigation": false,
+  "semanticCorrectnessValidated": false,
+  "limitations": [
+    "Structural validity and requirement references do not prove semantic coverage or correct expected results.",
+    "Duplicate detection identifies normalized exact content only; human review must check near duplicates.",
+    "Reported valid fraction describes final service outputs after its bounded repair; raw provider attempts are included for separate human review."
+  ],
+  "summary": {
+    "fixtures": 3,
+    "totalCases": 8,
+    "validCases": 8,
+    "invalidCases": 0,
+    "validFraction": 1,
+    "duplicateGroups": 0,
+    "unmappedRequirements": 0
+  },
+  "fixtures": [
+    {
+      "id": "required-email",
+      "totalCases": 2,
+      "validCases": 2,
+      "invalidCases": 0,
+      "validFraction": 1,
+      "errors": [],
+      "requirementMapping": [
+        {
+          "requirementId": "R1",
+          "text": "Saving a valid contact shows confirmation.",
+          "caseIds": [
+            "required-email-1"
+          ]
+        },
+        {
+          "requirementId": "R2",
+          "text": "Saving without an email shows a required-field error.",
+          "caseIds": [
+            "required-email-2"
+          ]
+        }
+      ],
+      "uncovered": [],
+      "duplicateGroups": [],
+      "elapsedMs": 11200,
+      "metrics": {
+        "inspectionMs": 0,
+        "aiMs": 11199,
+        "validationMs": 0,
+        "totalMs": 11199,
+        "repairCount": 0,
+        "acceptedWithoutRepair": 2,
+        "cacheHit": false
+      },
+      "input": {
+        "requirements": "A member can save a contact. An email address is required.",
+        "format": "plain",
+        "provider": "codex",
+        "frameworks": [],
+        "context": {
+          "acceptanceCriteria": "Saving a valid contact shows confirmation.\nSaving without an email shows a required-field error."
+        }
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "case-1",
+            "title": "Save a valid contact and verify confirmation",
+            "preconditions": "Sign in as a member with access to save contacts. The contact form location, valid test data, any other required fields, and the exact confirmation text are unspecified and must be established before execution.",
+            "steps": [
+              "Open the contact form.",
+              "Enter a valid email address and complete any other required fields with valid data.",
+              "Save the contact."
+            ],
+            "expected": "A visible confirmation indicates that the contact was saved.",
+            "requirementRef": "R1",
+            "automation": {}
+          },
+          {
+            "key": "case-2",
+            "title": "Save a contact without an email and verify the required-field error",
+            "preconditions": "Sign in as a member with access to save contacts. The contact form location, any other required fields, valid data for those fields, and the exact required-field error text are unspecified and must be established before execution.",
+            "steps": [
+              "Open the contact form.",
+              "Complete any other required fields with valid data.",
+              "Leave the email field empty.",
+              "Save the contact."
+            ],
+            "expected": "A visible required-field error indicates that an email address is required.",
+            "requirementRef": "R2",
+            "automation": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "quantity-boundaries",
+      "totalCases": 4,
+      "validCases": 4,
+      "invalidCases": 0,
+      "validFraction": 1,
+      "errors": [],
+      "requirementMapping": [
+        {
+          "requirementId": "R1",
+          "text": "Quantity 1 is accepted.",
+          "caseIds": [
+            "quantity-boundaries-1"
+          ]
+        },
+        {
+          "requirementId": "R2",
+          "text": "Quantity 10 is accepted.",
+          "caseIds": [
+            "quantity-boundaries-2"
+          ]
+        },
+        {
+          "requirementId": "R3",
+          "text": "Quantity 0 is rejected.",
+          "caseIds": [
+            "quantity-boundaries-3"
+          ]
+        },
+        {
+          "requirementId": "R4",
+          "text": "Quantity 11 is rejected.",
+          "caseIds": [
+            "quantity-boundaries-4"
+          ]
+        }
+      ],
+      "uncovered": [],
+      "duplicateGroups": [],
+      "elapsedMs": 17206,
+      "metrics": {
+        "inspectionMs": 0,
+        "aiMs": 17205,
+        "validationMs": 0,
+        "totalMs": 17205,
+        "repairCount": 0,
+        "acceptedWithoutRepair": 4,
+        "cacheHit": false
+      },
+      "input": {
+        "requirements": "An order accepts integer quantities from 1 through 10, inclusive. Values outside this range are rejected.",
+        "format": "plain",
+        "provider": "codex",
+        "frameworks": [],
+        "context": {
+          "acceptanceCriteria": "Quantity 1 is accepted.\nQuantity 10 is accepted.\nQuantity 0 is rejected.\nQuantity 11 is rejected."
+        }
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "case-1",
+            "title": "Accept the minimum quantity of 1",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible acceptance indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 1 in the order quantity field.",
+              "Perform the action that validates or submits the quantity.",
+              "Inspect whether the order accepts the quantity."
+            ],
+            "expected": "The order accepts quantity 1.",
+            "requirementRef": "R1",
+            "automation": {}
+          },
+          {
+            "key": "case-2",
+            "title": "Accept the maximum quantity of 10",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible acceptance indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 10 in the order quantity field.",
+              "Perform the action that validates or submits the quantity.",
+              "Inspect whether the order accepts the quantity."
+            ],
+            "expected": "The order accepts quantity 10.",
+            "requirementRef": "R2",
+            "automation": {}
+          },
+          {
+            "key": "case-3",
+            "title": "Reject quantity 0 below the minimum",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible rejection indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 0 in the order quantity field.",
+              "Perform the action that validates or submits the quantity, if available.",
+              "Inspect whether the order rejects the quantity."
+            ],
+            "expected": "The order rejects quantity 0.",
+            "requirementRef": "R3",
+            "automation": {}
+          },
+          {
+            "key": "case-4",
+            "title": "Reject quantity 11 above the maximum",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible rejection indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 11 in the order quantity field.",
+              "Perform the action that validates or submits the quantity, if available.",
+              "Inspect whether the order rejects the quantity."
+            ],
+            "expected": "The order rejects quantity 11.",
+            "requirementRef": "R4",
+            "automation": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "role-permissions",
+      "totalCases": 2,
+      "validCases": 2,
+      "invalidCases": 0,
+      "validFraction": 1,
+      "errors": [],
+      "requirementMapping": [
+        {
+          "requirementId": "R1",
+          "text": "An administrator can archive a contact.",
+          "caseIds": [
+            "role-permissions-1"
+          ]
+        },
+        {
+          "requirementId": "R2",
+          "text": "A read-only member cannot archive a contact.",
+          "caseIds": [
+            "role-permissions-2"
+          ]
+        }
+      ],
+      "uncovered": [],
+      "duplicateGroups": [],
+      "elapsedMs": 13250,
+      "metrics": {
+        "inspectionMs": 0,
+        "aiMs": 13249,
+        "validationMs": 0,
+        "totalMs": 13249,
+        "repairCount": 0,
+        "acceptedWithoutRepair": 2,
+        "cacheHit": false
+      },
+      "input": {
+        "requirements": "Administrators may archive contacts. Read-only members cannot archive contacts.",
+        "format": "plain",
+        "provider": "codex",
+        "frameworks": [],
+        "context": {
+          "acceptanceCriteria": "An administrator can archive a contact.\nA read-only member cannot archive a contact.",
+          "userRole": "Administrator and read-only member",
+          "preconditions": "Use a synthetic contact in a test account."
+        }
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "case-1",
+            "title": "Archive a contact as an administrator",
+            "preconditions": "Sign in as an administrator in a test account. Use a synthetic, unarchived contact. The contact navigation, archive controls, confirmation flow, and visible indicator of archived status are not supplied and must be identified before execution.",
+            "steps": [
+              "Open the synthetic contact.",
+              "Use the archive action and complete any required confirmation.",
+              "Inspect the contact's status.",
+              "Reload the page and inspect the contact's status again."
+            ],
+            "expected": "The contact is archived, and its archived status persists after reloading.",
+            "requirementRef": "R1",
+            "automation": {}
+          },
+          {
+            "key": "case-2",
+            "title": "Prevent a read-only member from archiving a contact",
+            "preconditions": "Sign in as a read-only member in a test account. Use a synthetic, unarchived contact accessible to that member. Navigation, permission configuration, archive controls, and the visible indicator of archived status are not supplied and must be identified before execution. The requirements do not specify whether the archive action is hidden, disabled, or rejected.",
+            "steps": [
+              "Open the synthetic contact as the read-only member.",
+              "Inspect the available contact actions.",
+              "Attempt to archive the contact if an actionable archive control is available.",
+              "Reload the page and inspect the contact's status."
+            ],
+            "expected": "The read-only member cannot archive the contact, and the contact remains unarchived.",
+            "requirementRef": "R2",
+            "automation": {}
+          }
+        ]
+      }
+    }
+  ],
+  "providerAttempts": [
+    {
+      "fixtureId": "required-email",
+      "elapsedMs": 11198,
+      "assessment": {
+        "id": "required-email",
+        "totalCases": 2,
+        "validCases": 2,
+        "invalidCases": 0,
+        "validFraction": 1,
+        "errors": [],
+        "requirementMapping": [
+          {
+            "requirementId": "R1",
+            "text": "Saving a valid contact shows confirmation.",
+            "caseIds": [
+              "required-email-1"
+            ]
+          },
+          {
+            "requirementId": "R2",
+            "text": "Saving without an email shows a required-field error.",
+            "caseIds": [
+              "required-email-2"
+            ]
+          }
+        ],
+        "uncovered": [],
+        "duplicateGroups": []
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "c1",
+            "title": "Save a valid contact and verify confirmation",
+            "preconditions": "Sign in as a member with access to save contacts. The contact form location, valid test data, any other required fields, and the exact confirmation text are unspecified and must be established before execution.",
+            "steps": [
+              "Open the contact form.",
+              "Enter a valid email address and complete any other required fields with valid data.",
+              "Save the contact."
+            ],
+            "expected": "A visible confirmation indicates that the contact was saved.",
+            "requirementRef": "R1",
+            "automation": {}
+          },
+          {
+            "key": "c2",
+            "title": "Save a contact without an email and verify the required-field error",
+            "preconditions": "Sign in as a member with access to save contacts. The contact form location, any other required fields, valid data for those fields, and the exact required-field error text are unspecified and must be established before execution.",
+            "steps": [
+              "Open the contact form.",
+              "Complete any other required fields with valid data.",
+              "Leave the email field empty.",
+              "Save the contact."
+            ],
+            "expected": "A visible required-field error indicates that an email address is required.",
+            "requirementRef": "R2",
+            "automation": {}
+          }
+        ]
+      }
+    },
+    {
+      "fixtureId": "quantity-boundaries",
+      "elapsedMs": 17205,
+      "assessment": {
+        "id": "quantity-boundaries",
+        "totalCases": 4,
+        "validCases": 4,
+        "invalidCases": 0,
+        "validFraction": 1,
+        "errors": [],
+        "requirementMapping": [
+          {
+            "requirementId": "R1",
+            "text": "Quantity 1 is accepted.",
+            "caseIds": [
+              "quantity-boundaries-1"
+            ]
+          },
+          {
+            "requirementId": "R2",
+            "text": "Quantity 10 is accepted.",
+            "caseIds": [
+              "quantity-boundaries-2"
+            ]
+          },
+          {
+            "requirementId": "R3",
+            "text": "Quantity 0 is rejected.",
+            "caseIds": [
+              "quantity-boundaries-3"
+            ]
+          },
+          {
+            "requirementId": "R4",
+            "text": "Quantity 11 is rejected.",
+            "caseIds": [
+              "quantity-boundaries-4"
+            ]
+          }
+        ],
+        "uncovered": [],
+        "duplicateGroups": []
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "c1",
+            "title": "Accept the minimum quantity of 1",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible acceptance indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 1 in the order quantity field.",
+              "Perform the action that validates or submits the quantity.",
+              "Inspect whether the order accepts the quantity."
+            ],
+            "expected": "The order accepts quantity 1.",
+            "requirementRef": "R1",
+            "automation": {}
+          },
+          {
+            "key": "c2",
+            "title": "Accept the maximum quantity of 10",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible acceptance indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 10 in the order quantity field.",
+              "Perform the action that validates or submits the quantity.",
+              "Inspect whether the order accepts the quantity."
+            ],
+            "expected": "The order accepts quantity 10.",
+            "requirementRef": "R2",
+            "automation": {}
+          },
+          {
+            "key": "c3",
+            "title": "Reject quantity 0 below the minimum",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible rejection indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 0 in the order quantity field.",
+              "Perform the action that validates or submits the quantity, if available.",
+              "Inspect whether the order rejects the quantity."
+            ],
+            "expected": "The order rejects quantity 0.",
+            "requirementRef": "R3",
+            "automation": {}
+          },
+          {
+            "key": "c4",
+            "title": "Reject quantity 11 above the maximum",
+            "preconditions": "An order is available for quantity entry. The page URL, quantity control, submission action, and visible rejection indicator are unknown and must be identified before execution. All other order inputs must be valid.",
+            "steps": [
+              "Enter 11 in the order quantity field.",
+              "Perform the action that validates or submits the quantity, if available.",
+              "Inspect whether the order rejects the quantity."
+            ],
+            "expected": "The order rejects quantity 11.",
+            "requirementRef": "R4",
+            "automation": {}
+          }
+        ]
+      }
+    },
+    {
+      "fixtureId": "role-permissions",
+      "elapsedMs": 13249,
+      "assessment": {
+        "id": "role-permissions",
+        "totalCases": 2,
+        "validCases": 2,
+        "invalidCases": 0,
+        "validFraction": 1,
+        "errors": [],
+        "requirementMapping": [
+          {
+            "requirementId": "R1",
+            "text": "An administrator can archive a contact.",
+            "caseIds": [
+              "role-permissions-1"
+            ]
+          },
+          {
+            "requirementId": "R2",
+            "text": "A read-only member cannot archive a contact.",
+            "caseIds": [
+              "role-permissions-2"
+            ]
+          }
+        ],
+        "uncovered": [],
+        "duplicateGroups": []
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "c1",
+            "title": "Archive a contact as an administrator",
+            "preconditions": "Sign in as an administrator in a test account. Use a synthetic, unarchived contact. The contact navigation, archive controls, confirmation flow, and visible indicator of archived status are not supplied and must be identified before execution.",
+            "steps": [
+              "Open the synthetic contact.",
+              "Use the archive action and complete any required confirmation.",
+              "Inspect the contact's status.",
+              "Reload the page and inspect the contact's status again."
+            ],
+            "expected": "The contact is archived, and its archived status persists after reloading.",
+            "requirementRef": "R1",
+            "automation": {}
+          },
+          {
+            "key": "c2",
+            "title": "Prevent a read-only member from archiving a contact",
+            "preconditions": "Sign in as a read-only member in a test account. Use a synthetic, unarchived contact accessible to that member. Navigation, permission configuration, archive controls, and the visible indicator of archived status are not supplied and must be identified before execution. The requirements do not specify whether the archive action is hidden, disabled, or rejected.",
+            "steps": [
+              "Open the synthetic contact as the read-only member.",
+              "Inspect the available contact actions.",
+              "Attempt to archive the contact if an actionable archive control is available.",
+              "Reload the page and inspect the contact's status."
+            ],
+            "expected": "The read-only member cannot archive the contact, and the contact remains unarchived.",
+            "requirementRef": "R2",
+            "automation": {}
+          }
+        ]
+      }
+    }
+  ],
+  "humanReview": [
+    "Check each expected result against the supplied criteria.",
+    "Check boundary and permission scenarios for missing coverage.",
+    "Check that manual steps are reproducible and no behavior was invented.",
+    "Review duplicates and all raw provider attempts, including repaired output."
+  ]
+}

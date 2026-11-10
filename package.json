@@ -5,8 +5,10 @@
   "description": "Local-only test case and automation draft helper",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test test/*.test.cjs",
-    "test:browser": "playwright test --config=test/playwright.config.cjs"
+    "dev": "node server.js",
+    "test": "node --test --test-concurrency=2 test/*.test.cjs",
+    "test:browser": "playwright test --config=test/playwright.config.cjs",
+    "benchmark:generation": "node scripts/benchmark-generation.cjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0"

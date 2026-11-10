@@ -28,7 +28,7 @@ This is a personal learning project built with AI-assisted development. The focu
 
 ## Quick start
 
-Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. Test Buddy starts Codex with unrelated user MCPs, plugins, and hooks excluded, while retaining your top-level model and reasoning preferences and existing sign-in. Generation is limited to JSON output and has a five-minute deadline for larger suites. Custom Codex providers are not yet supported by this isolated invocation. The bundled demo works without an AI account.
+Requirements: **Node.js 20+**, npm, and Chromium for Playwright. AI generation also needs a configured, signed-in **Codex CLI or Claude CLI**. Test Buddy starts Codex with unrelated user MCPs, plugins, and hooks excluded, while retaining your top-level model and reasoning preferences and existing sign-in. Generation is limited to JSON output and has a five-minute total deadline, including inspection and at most one repair request. Custom Codex providers are not yet supported by this isolated invocation. The bundled demo works without an AI account.
 
 ```sh
 git clone https://github.com/josenetoqa/qa-test-buddy.git
@@ -51,14 +51,24 @@ TEST_BUDDY_DATA_DIR=/absolute/path/to/private-data npm start
 
 1. Enter your requirements. Cases are always generated in plain text.
 2. Select your installed AI CLI and enable Playwright.
-3. Enter your application's target URL and click **Generate tests**. With Playwright selected, Test Buddy first reads visible field labels, placeholder text, button names, and form scopes and includes them in the AI request. Input values, cookies, and login tokens are excluded. Inspection uses a fresh browser session, so use a page accessible without login. It does not click controls or inspect later interaction states. Unlabeled fields can use exact placeholder locators scoped to their observed form, keeping repeated login and registration fields separate.
+3. Enter your application's target URL and click **Generate tests**. With Playwright selected, Test Buddy first reads visible field labels, placeholder text, button names, and form scopes and includes them in the AI request. Input values, cookies, and login tokens are excluded. Initial inspection uses a fresh browser session and never clicks controls. Optional captured states let you manually provide later or authenticated page observations. If inspection is unavailable, manual cases are still generated with blocked automation where evidence is missing. Unlabeled fields can use exact placeholder locators scoped to their observed form, keeping repeated login and registration fields separate.
 4. Check the manual cases, locators, and assertions. Edit actions or check locator matches if needed.
 5. Open the collapsed **Playwright code** preview, then run one case, selected cases, or all runnable cases. Clicking Run confirms the displayed actions; a separate Mark reviewed step is not needed.
 6. Inspect the result panel and export the report or evidence.
 
-Configure, Test review, and Results form one page. Generation scrolls to Test review, and execution scrolls to Results. Use **Jump to case** to navigate the automation list or **Collapse code** to close previews. Selecting cases keeps your scroll position and open previews.
+Configure, Test review, and Results form one page. Configuration separates requirements and output selection from optional settings. **Your setup** shows readiness, the Generate button, and progress with a link to Test review. Execution scrolls to Results. Use **Jump to case** to navigate the automation list or **Collapse code** to close previews. Selecting cases keeps your scroll position and open previews.
 
 Changing the requirements, URL, or Playwright selection blocks execution of the previous suite. **Use suite inputs** restores its saved inputs; generate again to use your changes. A failed generation never falls back to the demo. Saved suites restore their original inputs.
+
+### Improve generation quality
+
+Open **Optional test context** to add one acceptance criterion per line, a user role, preconditions, test data, and business rules. Each criterion gets a requirement ID. Review the resulting mapping, uncovered requirements, duplicate warnings, and generation metrics; these are review aids, not proof of correct coverage.
+
+Generation shows progress and supports cancellation/reconnection. It preserves accepted cases during one targeted repair. **Regenerate case** or **Regenerate selected** creates a new revision while preserving other cases. Expected outcomes cannot be changed by selected regeneration; update requirements and generate a new suite when the behavior changes.
+
+Initial inspection is reused for five minutes; choose **Refresh page inspection (ignore cache)** to bypass it. Under **Capture page states**, open a controlled browser, manually reach the needed state, describe its setup steps, and capture visible controls. Select snapshots to include them in generation. Captures close after five minutes and snapshots expire after 30 minutes. An optional local login profile can be used for capture; cookies and storage are not sent to AI.
+
+For details and benchmark commands, see [generation quality and efficiency](docs/generation-quality.md).
 
 ### Edit actions and inspect failures
 

@@ -8,6 +8,7 @@ output/
 
 # Local agent sessions and captured browser data
 .playwright-cli/
+.playwright-mcp/
 .remember/
 .codex/
 .agents/
