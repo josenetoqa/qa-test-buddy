@@ -81,3 +81,39 @@ test('locator check results say when the page ended at a different address', asy
     await page.locator('#automation-pane .case-card').first().locator('.verification-results', { hasText: 'different address' }).waitFor({ timeout: 10000 });
   } finally { await page.close(); }
 });
+
+test('Check locators sends the selected login profile and says whether a login was used', async () => {
+  const page = await browser.newPage();
+  try {
+    // One login profile for the demo target's origin.
+    await page.route('**/api/auth/profiles', route => route.request().method() === 'GET'
+      ? route.fulfill({ json: { profiles: [{ profileId: 'profile-fixture', label: 'QA login', origin: base, status: 'ready' }] } })
+      : route.continue());
+    const sent = [];
+    await page.route('**/verify', async route => {
+      const body = route.request().postDataJSON();
+      sent.push(body);
+      // The real server has no such profile. Run the real check without it,
+      // then mark the result the way the server marks a signed-in check.
+      const response = await route.fetch({ postData: JSON.stringify({ revision: body.revision }) });
+      const result = await response.json();
+      if (body.authProfileId)
+        for (const item of result.suite.cases)
+          if (item.automation.playwright.verification) item.automation.playwright.verification.authenticated = true;
+      await route.fulfill({ response, json: result });
+    });
+    await page.goto(base);
+    await page.locator('#demo-button').click();
+    const card = () => page.locator('#automation-pane .case-card').first();
+    await card().waitFor();
+    await card().getByRole('button', { name: 'Check locators', exact: true }).click();
+    await card().locator('.verification-results', { hasText: 'Checked without a login profile' }).waitFor({ timeout: 10000 });
+    assert.deepEqual(Object.keys(sent[0]), ['revision']);
+    await page.locator('#execution-options > summary').click();
+    await page.locator('#auth-profile').selectOption('profile-fixture');
+    await card().getByRole('button', { name: 'Check locators', exact: true }).click();
+    await card().locator('.verification-results', { hasText: 'signed in with the selected login profile' }).waitFor({ timeout: 10000 });
+    assert.deepEqual(Object.keys(sent[1]).sort(), ['authProfileId', 'revision']);
+    assert.equal(sent[1].authProfileId, 'profile-fixture');
+  } finally { await page.close(); }
+});

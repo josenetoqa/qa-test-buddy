@@ -510,10 +510,35 @@ const server = http.createServer(async (req, res) => {
       }
       if (req.method === "POST" && suiteMatch[4] === "verify") {
         const body = await readJson(req);
+        if (
+          Object.keys(body).some(
+            (key) => !["revision", "authProfileId"].includes(key),
+          )
+        )
+          return send(res, 400, {
+            error:
+              "Unsupported locator check field. Send the revision and, if needed, a login profile ID.",
+          });
+        if (
+          body.authProfileId !== undefined &&
+          (typeof body.authProfileId !== "string" ||
+            body.authProfileId.length > 200)
+        )
+          return send(res, 400, { error: "Invalid authentication profile." });
         const suite = getSuite(id, body.revision);
         if (!suite)
           return send(res, 404, { error: "Suite revision not found." });
-        const result = await verifyLocators(suite, suiteMatch[3]);
+        // The browser sends a profile ID only. The server finds the private
+        // login state itself, bound to the target's origin.
+        const storageState = body.authProfileId
+          ? auth.resolveProfile(
+              body.authProfileId,
+              new URL(suite.targetUrl).origin,
+            )
+          : undefined;
+        const result = await verifyLocators(suite, suiteMatch[3], {
+          storageState,
+        });
         const updated = suiteStore.recordVerification(
           id,
           suiteMatch[3],

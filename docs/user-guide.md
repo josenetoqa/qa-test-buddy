@@ -224,7 +224,7 @@ Execution reports reference evidence on the local Test Buddy server. Those links
 
 The capture session expires after five minutes. Unknown, expired, or wrong-origin profiles cannot be used. If the target service expires your login, capture a new session.
 
-Profiles apply to execution and explicitly opened page captures. Automatic initial-page inspection still uses a fresh session without the saved profile. Login state is stored privately on your computer and is excluded from AI prompts, reports, and Git. Deleting a profile removes the local copy; it does not revoke sessions at the target service.
+Profiles apply to execution, locator checks, and explicitly opened page captures. Locator check results say whether a login profile was used. Automatic initial-page inspection still uses a fresh session without the saved profile. Login state is stored privately on your computer and is excluded from AI prompts, reports, and Git. Deleting a profile removes the local copy; it does not revoke sessions at the target service.
 
 ## Reopen runs and revisions
 
@@ -247,6 +247,7 @@ A revision is a saved version of a suite. Editing or reviewing actions can creat
 | A case is blocked or manual-only | Read its reason and add a valid action mapping, or keep it as a manual case. A URL alone does not establish working locators. |
 | Locator checking says it could not load the target page | The application answered with an HTTP error, was unreachable, or redirected to another site. No locator was checked. Start the application, correct the URL, or sign in, then check again. |
 | Locator check results say the page ended at a different address | The target redirected within the same site, often to a login page. The results describe that page. |
+| Locator checking reports absent on a page that needs login | Select the matching profile under **Execution options → Authentication** and check again. The results say "Checked without a login profile" when none was used. |
 | Locator checking reports ambiguous | Make the locator specific to one control, using its exact label, role, test ID, placeholder, or a valid form scope. |
 | Locator checking reports deferred | Run the case to test the later interaction state. The read-only check does not perform earlier clicks or fills. |
 | The test fails even though generation succeeded | Inspect the failed step and Playwright error. Verify the locator, test data, and expected behavior against the application. |

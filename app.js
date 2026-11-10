@@ -942,6 +942,15 @@ function verificationDetails(verification) {
       "Initial-page check only. No clicks or fills were executed. Later page states are checked when you run the test.",
     ),
   );
+  if (verification.authenticated !== undefined)
+    details.append(
+      node(
+        "p",
+        verification.authenticated
+          ? "Checked while signed in with the selected login profile."
+          : "Checked without a login profile.",
+      ),
+    );
   if (verification.redirected)
     details.append(
       node(
@@ -1118,9 +1127,13 @@ function renderAutomation(framework = "playwright") {
           "Check locators",
           async () => {
             feedback.textContent = "Checking locators on the initial page…";
+            const profile = $("#auth-profile").value;
             const data = await post(
               `/api/suites/${generated.suiteId}/cases/${item.caseId}/verify`,
-              { revision: generated.revision },
+              {
+                revision: generated.revision,
+                ...(profile ? { authProfileId: profile } : {}),
+              },
             );
             const chosen = [...selected];
             caseFeedbacks.set(
