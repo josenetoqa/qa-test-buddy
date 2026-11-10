@@ -60,3 +60,24 @@ test('download buttons export all cases, combined Playwright tests, and one test
   const card=page.locator('#automation-pane .case-card').first();await card.locator('summary').click();pending=page.waitForEvent('download');await card.getByRole('button',{name:'Download this test',exact:true}).click();download=await pending;source=fs.readFileSync(await download.path(),'utf8');assert.equal((source.match(/test\(/g)||[]).length,1);assert.match(source,/TC-001/);assert.equal(await page.locator('#run-status').textContent(),'Not run');
  }finally{await page.close();}
 });
+
+test('locator check results say when the page ended at a different address', async () => {
+  const page = await demo();
+  try {
+    let card = page.locator('#automation-pane .case-card').first();
+    await card.getByRole('button', { name: 'Check locators', exact: true }).click();
+    await card.locator('.verification-results').waitFor();
+    assert.doesNotMatch(await card.locator('.verification-results').textContent(), /different address/);
+    // Same real check, with the redirect flag set as the server sets it for a redirected page.
+    await page.route('**/verify', async route => {
+      const response = await route.fetch();
+      const body = await response.json();
+      for (const item of body.suite.cases)
+        if (item.automation.playwright.verification) item.automation.playwright.verification.redirected = true;
+      await route.fulfill({ response, json: body });
+    });
+    card = page.locator('#automation-pane .case-card').first();
+    await card.getByRole('button', { name: 'Check locators', exact: true }).click();
+    await page.locator('#automation-pane .case-card').first().locator('.verification-results', { hasText: 'different address' }).waitFor({ timeout: 10000 });
+  } finally { await page.close(); }
+});

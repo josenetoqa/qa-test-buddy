@@ -74,7 +74,7 @@ For details and benchmark commands, see [generation quality and efficiency](docs
 
 The action editor shows only fields used by the selected operation. **Save actions** creates a new revision and updates its code. Save or cancel the editor before running; **Continue editing** links to the open editor when other controls are blocked.
 
-**Check locators** probes the initial page without clicking or filling. Before it reports an initial-page control as absent or hidden, it waits up to five seconds in total for controls that render after the page loads. Missing controls after a planned interaction are marked **deferred**, which means that state is still unverified. Results stay visible when selecting cases.
+**Check locators** probes the initial page without clicking or filling. Before it reports an initial-page control as absent or hidden, it waits up to five seconds in total for controls that render after the page loads. If the target does not load (an HTTP error, an unreachable server, or a redirect to another site), the check fails with that reason instead of calling every control absent. Missing controls after a planned interaction are marked **deferred**, which means that state is still unverified. Results stay visible when selecting cases.
 
 Failed cases show the Playwright error and failed step in the Test cases and Playwright tabs. **View execution results** links to the run details. Started and Finished use the browser's local time zone; completed runs with missing timestamps show a dash.
 

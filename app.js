@@ -942,6 +942,13 @@ function verificationDetails(verification) {
       "Initial-page check only. No clicks or fills were executed. Later page states are checked when you run the test.",
     ),
   );
+  if (verification.redirected)
+    details.append(
+      node(
+        "p",
+        "The page ended at a different address than the target. If that is a login page, these results describe the login page, not your target.",
+      ),
+    );
   for (const r of verification.results)
     details.append(
       node(

@@ -245,6 +245,8 @@ A revision is a saved version of a suite. Editing or reviewing actions can creat
 | Another case's buttons become disabled after Edit actions | Use **Continue editing** to return to the open editor, then save or cancel it. |
 | An edit is not reflected in the code | Click **Save actions** and check its feedback. Correct validation errors before leaving the editor. |
 | A case is blocked or manual-only | Read its reason and add a valid action mapping, or keep it as a manual case. A URL alone does not establish working locators. |
+| Locator checking says it could not load the target page | The application answered with an HTTP error, was unreachable, or redirected to another site. No locator was checked. Start the application, correct the URL, or sign in, then check again. |
+| Locator check results say the page ended at a different address | The target redirected within the same site, often to a login page. The results describe that page. |
 | Locator checking reports ambiguous | Make the locator specific to one control, using its exact label, role, test ID, placeholder, or a valid form scope. |
 | Locator checking reports deferred | Run the case to test the later interaction state. The read-only check does not perform earlier clicks or fills. |
 | The test fails even though generation succeeded | Inspect the failed step and Playwright error. Verify the locator, test data, and expected behavior against the application. |
