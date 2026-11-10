@@ -84,7 +84,7 @@ See [API contract](api-contract.md) for endpoint shapes and limits. Unit, integr
 
 ## Verification snapshot — November 10, 2026
 
-Live Playwright baseline against the bundled demo page: one scenario (`demo-contact-messages-known`), one run per provider, with the code at commit `7076e10`. That is before the parser, hint, prompt, inspector, and Claude isolation changes.
+Live Playwright baseline against the bundled demo page: one scenario (`demo-contact-messages-known`), one run per provider, with the code at commit `7076e10`. That is before the parser, hint, prompt, inspector, and Claude isolation changes. The committed `--playwright` mode runs three scenarios; a one-off script limited these runs to the first one to stay inside the approved number of provider calls.
 
 | Provider | Cases | Not blocked | Provider calls | Repair requests | Total time |
 | --- | --- | --- | --- | --- | --- |
