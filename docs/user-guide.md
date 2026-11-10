@@ -94,7 +94,7 @@ Click **Generate tests** to begin. Progress and errors appear next to the button
 The [generation quality guide](generation-quality.md) covers requirement context, per-case regeneration, progress/cancel/reconnect, cached inspection, page-state capture, metrics, and benchmarks.
 
 
-With Playwright enabled, Test Buddy first opens the target in a fresh Chromium session. It inspects a limited set of visible control metadata, including labels, placeholders, button names, input types, and form scopes. It then sends the requirements and this metadata to the selected AI CLI.
+With Playwright enabled, Test Buddy first opens the target in a fresh Chromium session. It inspects a limited set of visible control metadata, including labels, placeholders, button and link names, the names of custom toggles and choices (switch, checkbox, radio, and combobox roles), input types, and form scopes. A submit, button, or reset input is named by its `value` attribute; text typed into fields is never read. It then sends the requirements and this metadata to the selected AI CLI.
 
 The inspector does not click controls or fill fields. It does not collect input values, cookies, login tokens, or the full page content. It only observes the initial page, so it cannot establish what appears after submitting a form or opening a dialog.
 

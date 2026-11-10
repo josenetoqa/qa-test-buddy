@@ -40,7 +40,7 @@ The service does not execute setup instructions. They explain how to reach the o
 
 To regenerate cases after their snapshots expire or the server restarts, refresh the state list, remove unavailable states, and optionally select newly captured states. Regeneration uses this updated selection and saves it with the new suite revision. Changing only the state selection allows regeneration; changing requirements, context, frameworks, or the target still requires a new generation. Original expected outcomes remain protected.
 
-Snapshots contain bounded visible control metadata and setup instructions—not field values, cookies, or browser storage. Labels or user-written setup instructions can still contain private information; review what you capture. Capture URLs reject credentials, fragments, and sensitive query parameter names. Snapshots disappear after server restart.
+Snapshots contain bounded visible control metadata and setup instructions—not field values, cookies, or browser storage. Labels, button and link names, toggle names, and user-written setup instructions can still contain private information, especially on a signed-in page; review what you capture. Capture URLs reject credentials, fragments, and sensitive query parameter names. Snapshots disappear after server restart.
 
 ## Measure improvements
 
