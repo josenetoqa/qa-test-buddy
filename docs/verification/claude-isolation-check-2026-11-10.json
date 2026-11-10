@@ -1,0 +1,50 @@
+{
+  "which": "shipped",
+  "args": [
+    "-p",
+    "--output-format",
+    "json",
+    "--tools",
+    "",
+    "--permission-mode",
+    "dontAsk",
+    "--safe-mode",
+    "--strict-mcp-config",
+    "--no-session-persistence"
+  ],
+  "cwdName": "test-buddy-generation-OStuwS",
+  "strippedVariableNames": [
+    "ORCA_CLAUDE_PROFILE_POINTER",
+    "ORCA_CLAUDE_AGENT_VIEW_PLUGIN_DIR",
+    "CLAUDE_CODE_PLUGIN_DIRS",
+    "ORCA_CLAUDE_CONFIG_DIR",
+    "CLAUDE_CODE_FORCE_TERMINAL_IMAGES",
+    "CLAUDE_CODE_ENTRYPOINT",
+    "CLAUDE_CODE_MESSAGING_SOCKET",
+    "CLAUDE_CODE_MESSAGING_TOKEN",
+    "CLAUDE_CODE_EXECPATH",
+    "CLAUDECODE",
+    "CLAUDE_CODE_SESSION_ID",
+    "CLAUDE_CODE_CHILD_SESSION",
+    "CLAUDE_CODE_SESSION_ATTENDED",
+    "CLAUDE_PID",
+    "CLAUDE_EFFORT"
+  ],
+  "ok": true,
+  "is_error": false,
+  "subtype": "success",
+  "result": "{\"schemaVersion\":2,\"cases\":[]}",
+  "num_turns": 1,
+  "duration_ms": 2745,
+  "total_cost_usd": 0.0177358,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2127,
+    "cache_read_input_tokens": 1559,
+    "output_tokens": 20
+  },
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "wallMs": 8235
+}

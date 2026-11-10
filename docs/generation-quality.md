@@ -81,3 +81,22 @@ Compare repeated runs using the same corpus, provider settings, and machine cond
 - These are one-run observations, not a demonstrated speedup over the old generator. Manual inspection of the outputs showed explicit missing-context notes; the role-permission output added a reload/persistence check that still needs a reviewer to confirm against product requirements.
 
 See [API contract](api-contract.md) for endpoint shapes and limits. Unit, integration, and browser results are recorded in the [implementation record](implementation-2026-10-08.md).
+
+## Verification snapshot — November 10, 2026
+
+Live Playwright baseline against the bundled demo page: one scenario (`demo-contact-messages-known`), one run per provider, with the code at commit `7076e10`. That is before the parser, hint, prompt, inspector, and Claude isolation changes.
+
+| Provider | Cases | Not blocked | Provider calls | Repair requests | Total time |
+| --- | --- | --- | --- | --- | --- |
+| Codex | 3 | 3 | 2 | 1 | 37 s |
+| Claude | 5 | 5 | 2 | 1 | 146 s |
+
+- Both first answers were rejected whole for the same reason: each operation named itself in a field called `type` instead of `op`. The prompt at that commit never named the field, and the repair hint said only "Unsupported or unknown fields." Both repair requests succeeded.
+- "Not blocked" is structural. The cases were not executed.
+- Claude at that commit loaded personal customizations. Its two session files show about 217,000 input tokens of context per call and ten hook entries (seven successes, one non-blocking error, one system message, one added context). The CLI reported $1.80 and $0.24 for the two calls, and they left two session folders under `~/.claude/projects`.
+- Claude isolation check with the shipped arguments (one small prompt, after commit `a3d04d3`): all flags were accepted, sign-in worked, the context was 3,688 input tokens, the CLI reported $0.018, and no session folder was left.
+- The live runs dropped the calling session's `CLAUDE*` and `ORCA_CLAUDE*` environment variables, so the CLIs ran as they would from a normal terminal.
+
+Not measured: the same scenario after the changes, the other two scenarios, and repeat runs. One run per provider cannot show a rate.
+
+Raw reports: [Claude baseline](verification/generation-playwright-baseline-2026-11-10-claude.json), [Codex baseline](verification/generation-playwright-baseline-2026-11-10-codex.json), [Claude isolation check](verification/claude-isolation-check-2026-11-10.json).

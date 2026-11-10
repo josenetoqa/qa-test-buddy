@@ -1,0 +1,1085 @@
+{
+  "mode": "live-provider-playwright-demo",
+  "provider": "claude",
+  "providerInvoked": true,
+  "browserNavigation": true,
+  "target": "Bundled demo page served from a local loopback port.",
+  "semanticCorrectnessValidated": false,
+  "limitations": [
+    "Structural validity and requirement references do not prove semantic coverage or correct expected results.",
+    "Duplicate detection identifies normalized exact content only; human review must check near duplicates.",
+    "A \"not blocked\" case passed structural checks only. It was not executed, and nothing shows that it passes or proves its requirement.",
+    "One page and three scenarios cannot describe other applications."
+  ],
+  "summary": {
+    "fixtures": 1,
+    "failedFixtures": 0,
+    "totalCases": 5,
+    "notBlocked": 5,
+    "blocked": 0,
+    "manualOnly": 0,
+    "unmapped": 0,
+    "notBlockedShare": 1,
+    "providerCalls": 2,
+    "repairRequests": 1
+  },
+  "fixtures": [
+    {
+      "id": "demo-contact-messages-known",
+      "automation": {
+        "totalCases": 5,
+        "notBlocked": 5,
+        "blocked": 0,
+        "manualOnly": 0,
+        "unmapped": 0,
+        "blockedReasons": []
+      },
+      "uncovered": [],
+      "duplicateGroups": [],
+      "elapsedMs": 146288,
+      "metrics": {
+        "inspectionMs": 2767,
+        "aiMs": 143508,
+        "validationMs": 2,
+        "totalMs": 146285,
+        "repairCount": 1,
+        "acceptedWithoutRepair": 0,
+        "cacheHit": false
+      },
+      "warnings": [],
+      "input": {
+        "requirements": "The contact form creates a contact from a full name and an email address. It shows a status message after Create contact is clicked.",
+        "format": "plain",
+        "context": {
+          "acceptanceCriteria": "Submitting a valid email address shows \"Contact created\".\nSubmitting without an email address shows \"Enter an email address\".\nSubmitting an email address without an @ sign shows \"Enter a valid email address\".",
+          "testData": "Valid contact: Ana Lima, ana.lima@example.com. Invalid email address: ana.lima.example.com."
+        },
+        "provider": "claude",
+        "frameworks": [
+          "playwright"
+        ],
+        "targetUrl": "http://127.0.0.1:59060/demo/"
+      },
+      "cases": [
+        {
+          "displayId": "TC-001",
+          "title": "Create a contact with a valid full name and email address",
+          "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima@example.com'. Unknown: whether the contact is also stored anywhere else. This case does not check that.",
+          "steps": [
+            "Open the contact form page.",
+            "Enter 'Ana Lima' in the Full name field.",
+            "Enter 'ana.lima@example.com' in the Email address field.",
+            "Click Create contact.",
+            "Verify the status message."
+          ],
+          "expected": "The status message \"Contact created\" is shown.",
+          "requirementRef": "R1",
+          "automation": {
+            "status": "draft",
+            "reason": "Review the actions and assertion before running.",
+            "operations": [
+              {
+                "stepId": "s1",
+                "op": "navigate",
+                "value": "http://127.0.0.1:59060/demo/"
+              },
+              {
+                "stepId": "s2",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Full name",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "Ana Lima"
+              },
+              {
+                "stepId": "s3",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Email address",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "ana.lima@example.com"
+              },
+              {
+                "stepId": "s4",
+                "op": "click",
+                "locator": {
+                  "kind": "role",
+                  "role": "button",
+                  "value": "Create contact",
+                  "exact": true,
+                  "formIndex": 0
+                }
+              },
+              {
+                "stepId": "s5",
+                "op": "expectText",
+                "value": "Contact created"
+              }
+            ]
+          }
+        },
+        {
+          "displayId": "TC-002",
+          "title": "Submit the contact form without an email address",
+          "preconditions": "The contact form page is open at the target URL in its initial state. The Email address field is empty. Full name is filled with 'Ana Lima', so only the email address is missing.",
+          "steps": [
+            "Open the contact form page.",
+            "Enter 'Ana Lima' in the Full name field.",
+            "Leave the Email address field empty.",
+            "Click Create contact.",
+            "Verify the status message."
+          ],
+          "expected": "The status message \"Enter an email address\" is shown.",
+          "requirementRef": "R2",
+          "automation": {
+            "status": "draft",
+            "reason": "Review the actions and assertion before running.",
+            "operations": [
+              {
+                "stepId": "s1",
+                "op": "navigate",
+                "value": "http://127.0.0.1:59060/demo/"
+              },
+              {
+                "stepId": "s2",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Full name",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "Ana Lima"
+              },
+              {
+                "stepId": "s3",
+                "op": "click",
+                "locator": {
+                  "kind": "role",
+                  "role": "button",
+                  "value": "Create contact",
+                  "exact": true,
+                  "formIndex": 0
+                }
+              },
+              {
+                "stepId": "s4",
+                "op": "expectText",
+                "value": "Enter an email address"
+              }
+            ]
+          }
+        },
+        {
+          "displayId": "TC-003",
+          "title": "Submit an email address without an @ sign",
+          "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima.example.com'. Unknown: the Email address input has type 'email', so native browser validation may stop the submit before the app shows its own message.",
+          "steps": [
+            "Open the contact form page.",
+            "Enter 'Ana Lima' in the Full name field.",
+            "Enter 'ana.lima.example.com' in the Email address field.",
+            "Click Create contact.",
+            "Verify the status message."
+          ],
+          "expected": "The status message \"Enter a valid email address\" is shown.",
+          "requirementRef": "R3",
+          "automation": {
+            "status": "draft",
+            "reason": "Review the actions and assertion before running.",
+            "operations": [
+              {
+                "stepId": "s1",
+                "op": "navigate",
+                "value": "http://127.0.0.1:59060/demo/"
+              },
+              {
+                "stepId": "s2",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Full name",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "Ana Lima"
+              },
+              {
+                "stepId": "s3",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Email address",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "ana.lima.example.com"
+              },
+              {
+                "stepId": "s4",
+                "op": "click",
+                "locator": {
+                  "kind": "role",
+                  "role": "button",
+                  "value": "Create contact",
+                  "exact": true,
+                  "formIndex": 0
+                }
+              },
+              {
+                "stepId": "s5",
+                "op": "expectText",
+                "value": "Enter a valid email address"
+              }
+            ]
+          }
+        },
+        {
+          "displayId": "TC-004",
+          "title": "Success message does not appear when the email address has no @ sign",
+          "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima.example.com'.",
+          "steps": [
+            "Open the contact form page.",
+            "Enter 'Ana Lima' in the Full name field.",
+            "Enter 'ana.lima.example.com' in the Email address field.",
+            "Click Create contact.",
+            "Verify that the page does not show the text \"Contact created\"."
+          ],
+          "expected": "The text \"Contact created\" is not shown anywhere on the page.",
+          "requirementRef": "R1 R3",
+          "automation": {
+            "status": "draft",
+            "reason": "Review the actions and assertion before running.",
+            "operations": [
+              {
+                "stepId": "s1",
+                "op": "navigate",
+                "value": "http://127.0.0.1:59060/demo/"
+              },
+              {
+                "stepId": "s2",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Full name",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "Ana Lima"
+              },
+              {
+                "stepId": "s3",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Email address",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "ana.lima.example.com"
+              },
+              {
+                "stepId": "s4",
+                "op": "click",
+                "locator": {
+                  "kind": "role",
+                  "role": "button",
+                  "value": "Create contact",
+                  "exact": true,
+                  "formIndex": 0
+                }
+              },
+              {
+                "stepId": "s5",
+                "op": "expectCount",
+                "locator": {
+                  "kind": "text",
+                  "value": "Contact created",
+                  "exact": true
+                },
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "displayId": "TC-005",
+          "title": "Success message does not appear when the email address is empty",
+          "preconditions": "The contact form page is open at the target URL in its initial state. Full name is filled with 'Ana Lima'. The Email address field is empty.",
+          "steps": [
+            "Open the contact form page.",
+            "Enter 'Ana Lima' in the Full name field.",
+            "Leave the Email address field empty.",
+            "Click Create contact.",
+            "Verify that the page does not show the text \"Contact created\"."
+          ],
+          "expected": "The text \"Contact created\" is not shown anywhere on the page.",
+          "requirementRef": "R1 R2",
+          "automation": {
+            "status": "draft",
+            "reason": "Review the actions and assertion before running.",
+            "operations": [
+              {
+                "stepId": "s1",
+                "op": "navigate",
+                "value": "http://127.0.0.1:59060/demo/"
+              },
+              {
+                "stepId": "s2",
+                "op": "fill",
+                "locator": {
+                  "kind": "label",
+                  "value": "Full name",
+                  "exact": true,
+                  "formIndex": 0
+                },
+                "value": "Ana Lima"
+              },
+              {
+                "stepId": "s3",
+                "op": "click",
+                "locator": {
+                  "kind": "role",
+                  "role": "button",
+                  "value": "Create contact",
+                  "exact": true,
+                  "formIndex": 0
+                }
+              },
+              {
+                "stepId": "s4",
+                "op": "expectCount",
+                "locator": {
+                  "kind": "text",
+                  "value": "Contact created",
+                  "exact": true
+                },
+                "value": 0
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "providerAttempts": [
+    {
+      "fixtureId": "demo-contact-messages-known",
+      "elapsedMs": 70430,
+      "assessment": {
+        "id": "demo-contact-messages-known",
+        "totalCases": 5,
+        "validCases": 0,
+        "invalidCases": 5,
+        "validFraction": 0,
+        "errors": [
+          {
+            "index": 0,
+            "error": "Unsupported or unknown fields."
+          },
+          {
+            "index": 1,
+            "error": "Unsupported or unknown fields."
+          },
+          {
+            "index": 2,
+            "error": "Unsupported or unknown fields."
+          },
+          {
+            "index": 3,
+            "error": "Unsupported or unknown fields."
+          },
+          {
+            "index": 4,
+            "error": "Unsupported or unknown fields."
+          }
+        ],
+        "requirementMapping": [
+          {
+            "requirementId": "R1",
+            "text": "Submitting a valid email address shows \"Contact created\".",
+            "caseIds": []
+          },
+          {
+            "requirementId": "R2",
+            "text": "Submitting without an email address shows \"Enter an email address\".",
+            "caseIds": []
+          },
+          {
+            "requirementId": "R3",
+            "text": "Submitting an email address without an @ sign shows \"Enter a valid email address\".",
+            "caseIds": []
+          }
+        ],
+        "uncovered": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "duplicateGroups": []
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "c1",
+            "title": "Create a contact with a valid full name and email address",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima@example.com'. Whether the contact is also stored anywhere else is unknown and is not checked here.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Enter 'ana.lima@example.com' in the Email address field.",
+              "Click Create contact.",
+              "Verify the status message."
+            ],
+            "expected": "The status message \"Contact created\" is shown.",
+            "requirementRef": "R1",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "All setup controls (Full name, Email address, Create contact) were seen on the initial page. The post-submit message has not been captured yet, so the assertion uses the exact text from R1 and needs a first run to confirm.",
+                "operations": [
+                  {
+                    "type": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Email address",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "ana.lima@example.com"
+                  },
+                  {
+                    "type": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "type": "expectText",
+                    "value": "Contact created"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c2",
+            "title": "Submit the contact form without an email address",
+            "preconditions": "The contact form page is open at the target URL in its initial state. The Email address field is empty. Full name is filled with 'Ana Lima' so that only the email address is missing.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Leave the Email address field empty.",
+              "Click Create contact.",
+              "Verify the status message."
+            ],
+            "expected": "The status message \"Enter an email address\" is shown.",
+            "requirementRef": "R2",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Setup uses only controls seen on the initial page. The Email address field is not marked as required, so native browser validation shouldn't block the submit. The error message has not been captured yet, so the assertion uses the exact text from R2.",
+                "operations": [
+                  {
+                    "type": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "type": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "type": "expectText",
+                    "value": "Enter an email address"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c3",
+            "title": "Submit an email address without an @ sign",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima.example.com'. Unknown: the Email address input is type 'email', so native browser validation may stop the submit before the app shows its own message.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Enter 'ana.lima.example.com' in the Email address field.",
+              "Click Create contact.",
+              "Verify the status message."
+            ],
+            "expected": "The status message \"Enter a valid email address\" is shown.",
+            "requirementRef": "R3",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Setup uses only controls seen on the initial page. Risk: the input is type 'email', so native browser validation may block the submit and the app message may never appear. If that happens, report it as a defect against R3. Don't change the expected result. The message has not been captured yet, so the assertion uses the exact text from R3.",
+                "operations": [
+                  {
+                    "type": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Email address",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "ana.lima.example.com"
+                  },
+                  {
+                    "type": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "type": "expectText",
+                    "value": "Enter a valid email address"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c4",
+            "title": "Success message does not appear when the email address has no @ sign",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima.example.com'.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Enter 'ana.lima.example.com' in the Email address field.",
+              "Click Create contact.",
+              "Verify that the page does not show the text \"Contact created\"."
+            ],
+            "expected": "The text \"Contact created\" is not shown anywhere on the page.",
+            "requirementRef": "R1 R3",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Negative check built only from controls seen on the initial page. It proves that invalid input doesn't produce the R1 success message. It complements c3 and doesn't replace it.",
+                "operations": [
+                  {
+                    "type": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Email address",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "ana.lima.example.com"
+                  },
+                  {
+                    "type": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "type": "expectCount",
+                    "locator": {
+                      "kind": "text",
+                      "value": "Contact created",
+                      "exact": true
+                    },
+                    "value": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c5",
+            "title": "Success message does not appear when the email address is empty",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Full name is filled with 'Ana Lima'. The Email address field is empty.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Leave the Email address field empty.",
+              "Click Create contact.",
+              "Verify that the page does not show the text \"Contact created\"."
+            ],
+            "expected": "The text \"Contact created\" is not shown anywhere on the page.",
+            "requirementRef": "R1 R2",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Negative check built only from controls seen on the initial page. It proves that a missing email address doesn't produce the R1 success message. It complements c2.",
+                "operations": [
+                  {
+                    "type": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "type": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "type": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "type": "expectCount",
+                    "locator": {
+                      "kind": "text",
+                      "value": "Contact created",
+                      "exact": true
+                    },
+                    "value": 0
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fixtureId": "demo-contact-messages-known",
+      "elapsedMs": 73077,
+      "assessment": {
+        "id": "demo-contact-messages-known",
+        "totalCases": 5,
+        "validCases": 5,
+        "invalidCases": 0,
+        "validFraction": 1,
+        "errors": [],
+        "requirementMapping": [
+          {
+            "requirementId": "R1",
+            "text": "Submitting a valid email address shows \"Contact created\".",
+            "caseIds": [
+              "demo-contact-messages-known-1",
+              "demo-contact-messages-known-4",
+              "demo-contact-messages-known-5"
+            ]
+          },
+          {
+            "requirementId": "R2",
+            "text": "Submitting without an email address shows \"Enter an email address\".",
+            "caseIds": [
+              "demo-contact-messages-known-2",
+              "demo-contact-messages-known-5"
+            ]
+          },
+          {
+            "requirementId": "R3",
+            "text": "Submitting an email address without an @ sign shows \"Enter a valid email address\".",
+            "caseIds": [
+              "demo-contact-messages-known-3",
+              "demo-contact-messages-known-4"
+            ]
+          }
+        ],
+        "uncovered": [],
+        "duplicateGroups": []
+      },
+      "output": {
+        "schemaVersion": 2,
+        "cases": [
+          {
+            "key": "c1",
+            "title": "Create a contact with a valid full name and email address",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima@example.com'. Unknown: whether the contact is also stored anywhere else. This case does not check that.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Enter 'ana.lima@example.com' in the Email address field.",
+              "Click Create contact.",
+              "Verify the status message."
+            ],
+            "expected": "The status message \"Contact created\" is shown.",
+            "requirementRef": "R1",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "All setup controls (Full name, Email address, Create contact) were seen on the initial page. The message after submit has not been captured yet, so the assertion uses the exact text from R1 and needs a first run to confirm it.",
+                "operations": [
+                  {
+                    "op": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Email address",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "ana.lima@example.com"
+                  },
+                  {
+                    "op": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "op": "expectText",
+                    "value": "Contact created"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c2",
+            "title": "Submit the contact form without an email address",
+            "preconditions": "The contact form page is open at the target URL in its initial state. The Email address field is empty. Full name is filled with 'Ana Lima', so only the email address is missing.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Leave the Email address field empty.",
+              "Click Create contact.",
+              "Verify the status message."
+            ],
+            "expected": "The status message \"Enter an email address\" is shown.",
+            "requirementRef": "R2",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Setup uses only controls seen on the initial page. The Email address field is not marked as required, so native browser validation should not block the submit. The error message has not been captured yet, so the assertion uses the exact text from R2.",
+                "operations": [
+                  {
+                    "op": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "op": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "op": "expectText",
+                    "value": "Enter an email address"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c3",
+            "title": "Submit an email address without an @ sign",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima.example.com'. Unknown: the Email address input has type 'email', so native browser validation may stop the submit before the app shows its own message.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Enter 'ana.lima.example.com' in the Email address field.",
+              "Click Create contact.",
+              "Verify the status message."
+            ],
+            "expected": "The status message \"Enter a valid email address\" is shown.",
+            "requirementRef": "R3",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Setup uses only controls seen on the initial page. Risk: the input has type 'email', so native browser validation may block the submit and the app message may never show up. If that happens, report it as a defect against R3. Do not change the expected result. The message has not been captured yet, so the assertion uses the exact text from R3.",
+                "operations": [
+                  {
+                    "op": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Email address",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "ana.lima.example.com"
+                  },
+                  {
+                    "op": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "op": "expectText",
+                    "value": "Enter a valid email address"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c4",
+            "title": "Success message does not appear when the email address has no @ sign",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Test data: Full name 'Ana Lima', Email address 'ana.lima.example.com'.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Enter 'ana.lima.example.com' in the Email address field.",
+              "Click Create contact.",
+              "Verify that the page does not show the text \"Contact created\"."
+            ],
+            "expected": "The text \"Contact created\" is not shown anywhere on the page.",
+            "requirementRef": "R1 R3",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Negative check built only from controls seen on the initial page. It proves that invalid input does not produce the R1 success message. It adds to c3 and does not replace it.",
+                "operations": [
+                  {
+                    "op": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Email address",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "ana.lima.example.com"
+                  },
+                  {
+                    "op": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "op": "expectCount",
+                    "locator": {
+                      "kind": "text",
+                      "value": "Contact created",
+                      "exact": true
+                    },
+                    "value": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": "c5",
+            "title": "Success message does not appear when the email address is empty",
+            "preconditions": "The contact form page is open at the target URL in its initial state. Full name is filled with 'Ana Lima'. The Email address field is empty.",
+            "steps": [
+              "Open the contact form page.",
+              "Enter 'Ana Lima' in the Full name field.",
+              "Leave the Email address field empty.",
+              "Click Create contact.",
+              "Verify that the page does not show the text \"Contact created\"."
+            ],
+            "expected": "The text \"Contact created\" is not shown anywhere on the page.",
+            "requirementRef": "R1 R2",
+            "automation": {
+              "playwright": {
+                "status": "draft",
+                "reason": "Negative check built only from controls seen on the initial page. It proves that a missing email address does not produce the R1 success message. It adds to c2.",
+                "operations": [
+                  {
+                    "op": "navigate",
+                    "value": "http://127.0.0.1:59060/demo/"
+                  },
+                  {
+                    "op": "fill",
+                    "locator": {
+                      "kind": "label",
+                      "value": "Full name",
+                      "exact": true,
+                      "formIndex": 0
+                    },
+                    "value": "Ana Lima"
+                  },
+                  {
+                    "op": "click",
+                    "locator": {
+                      "kind": "role",
+                      "role": "button",
+                      "value": "Create contact",
+                      "exact": true,
+                      "formIndex": 0
+                    }
+                  },
+                  {
+                    "op": "expectCount",
+                    "locator": {
+                      "kind": "text",
+                      "value": "Contact created",
+                      "exact": true
+                    },
+                    "value": 0
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "humanReview": [
+    "Check each expected result against the supplied criteria.",
+    "Check that every not-blocked case has an assertion that proves its expected result.",
+    "Check that each blocked reason names something the page or the requirements really lack.",
+    "Review all raw provider attempts, including repaired output."
+  ],
+  "environment": {
+    "strippedVariableNames": [
+      "ORCA_CLAUDE_PROFILE_POINTER",
+      "ORCA_CLAUDE_AGENT_VIEW_PLUGIN_DIR",
+      "CLAUDE_CODE_PLUGIN_DIRS",
+      "ORCA_CLAUDE_CONFIG_DIR",
+      "CLAUDE_CODE_FORCE_TERMINAL_IMAGES",
+      "CLAUDE_CODE_ENTRYPOINT",
+      "CLAUDE_CODE_MESSAGING_SOCKET",
+      "CLAUDE_CODE_MESSAGING_TOKEN",
+      "CLAUDE_CODE_EXECPATH",
+      "CLAUDECODE",
+      "CLAUDE_CODE_SESSION_ID",
+      "CLAUDE_CODE_CHILD_SESSION",
+      "CLAUDE_CODE_SESSION_ATTENDED",
+      "CLAUDE_PID",
+      "CLAUDE_EFFORT"
+    ],
+    "sourceTree": "baseline"
+  }
+}
