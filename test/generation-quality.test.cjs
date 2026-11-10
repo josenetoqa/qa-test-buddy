@@ -127,3 +127,18 @@ test("validation hints echo bounded field names and never field values", () => {
   // 11 unknown fields: five are named, the rest are counted.
   assert.match(error, /and 6 more/);
 });
+test("prompt shows an operation example that passes the same validation as model output", () => {
+  const { OPERATIONS_EXAMPLE } = require("../lib/generation-quality.cjs");
+  const prompt = buildPrompt(input, { controls: [] });
+  assert.ok(prompt.includes(JSON.stringify(OPERATIONS_EXAMPLE)));
+  assert.ok(prompt.includes('"op"'));
+  const { valid, invalid } = assessCases(
+    { schemaVersion: 2, cases: [draft(OPERATIONS_EXAMPLE)] },
+    input,
+  );
+  assert.deepEqual(
+    invalid.map((e) => e.error),
+    [],
+  );
+  assert.equal(valid.length, 1);
+});
