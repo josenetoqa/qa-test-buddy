@@ -141,7 +141,7 @@ A saved edit changes the code being tested. A result from an older revision is n
 
 ## Check locators
 
-Click **Check locators** to inspect matches on the initial page without performing the case's clicks or fills.
+Click **Check locators** to inspect matches on the initial page without performing the case's clicks or fills. Many applications render their controls shortly after the page loads, so the check waits up to five seconds in total before it reports an initial-page control as `absent` or `hidden`.
 
 | Result | How to interpret it |
 | --- | --- |
