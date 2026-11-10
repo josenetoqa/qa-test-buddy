@@ -84,3 +84,46 @@ test("prompt describes all assertions and has no registration-specific rule", ()
   assert.ok(!prompt.includes("registration-opening"));
   assert.ok(prompt.includes("R2"));
 });
+const draft = (operations) => ({
+  ...item(),
+  automation: { playwright: { status: "draft", operations } },
+});
+test("an unknown operation field is named together with the allowed fields", () => {
+  const { invalid } = assessCases(
+    { schemaVersion: 2, cases: [draft([{ action: "click", value: "Save" }])] },
+    input,
+  );
+  assert.equal(invalid.length, 1);
+  assert.match(invalid[0].error, /fields: action\./);
+  assert.match(invalid[0].error, /Allowed fields: .*\bop\b.*\blocator\b/);
+});
+test("a missing framework mapping is named", () => {
+  const { invalid } = assessCases(
+    { schemaVersion: 2, cases: [{ ...item(), automation: {} }] },
+    input,
+  );
+  assert.match(invalid[0].error, /Missing playwright automation mapping/);
+});
+test("validation hints echo bounded field names and never field values", () => {
+  const extra = Object.fromEntries(
+    Array.from({ length: 9 }, (_, i) => [`extra${i}`, "PRIVATE-VALUE"]),
+  );
+  const operation = {
+    op: "expectText",
+    value: "Saved",
+    ["k".repeat(500)]: "PRIVATE-VALUE",
+    "bad\nname<script>": 1,
+    ...extra,
+  };
+  const { invalid } = assessCases(
+    { schemaVersion: 2, cases: [draft([operation])] },
+    input,
+  );
+  const error = invalid[0].error;
+  assert.ok(!error.includes("PRIVATE-VALUE"));
+  assert.ok(!error.includes("<script>"));
+  assert.ok(!error.includes("\n"));
+  assert.ok(error.length <= 400, `hint is ${error.length} characters`);
+  // 11 unknown fields: five are named, the rest are counted.
+  assert.match(error, /and 6 more/);
+});

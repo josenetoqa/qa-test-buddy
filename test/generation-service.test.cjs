@@ -383,3 +383,20 @@ test("failed saving of replacement evidence preserves the original selection and
     await base.service.close();
   }
 });
+test("an answer without JSON gets a repair hint that says so", async () => {
+  const prompts = [];
+  const { service } = setup({
+    callProvider: async (prompt) => {
+      prompts.push(prompt);
+      return prompts.length === 1
+        ? { invalidResponse: true }
+        : { cases: [item()] };
+    },
+  });
+  const suite = await service.generate(input);
+  assert.equal(prompts.length, 2);
+  assert.match(prompts[1], /did not contain a JSON object/i);
+  assert.ok(!prompts[1].includes("invalidResponse"));
+  assert.equal(suite.cases.length, 1);
+  await service.close();
+});
