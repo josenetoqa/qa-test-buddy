@@ -24,6 +24,8 @@ Generation metadata is `{requirements:[{id,text}],quality:{coverage:[{requiremen
 
 Codex runs ephemerally in a temporary directory with `--ignore-user-config`, read-only sandboxing, and instructions to return QA JSON without tools or skill workflows. Top-level model/reasoning/OpenAI-provider strings are retained; unrelated MCP/plugin/hook configuration is excluded. Custom providers are rejected explicitly rather than switched silently. Timeout failures return 502 with a five-minute explanation; temporary generation directories are cleaned afterward.
 
+A provider answer may wrap its JSON in a sentence or a code fence. The first JSON object that holds a `cases` list is used; any other text is ignored and never executed. An answer with no such object still uses the single repair request. When the Claude CLI flags its own error (`is_error`), generation fails with 502 and the CLI's message (at most 300 characters) and makes no repair request.
+
 `POST /api/demo` or `/api/demo/suites` creates a deterministic three-case suite targeting `/demo/`, with pass/intentional-fail/pass mappings. No AI call.
 
 ## Canonical suites

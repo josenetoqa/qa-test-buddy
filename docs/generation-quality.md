@@ -12,7 +12,7 @@ A mapped requirement is not verified coverage. You still need to check whether e
 
 ## Repair and regenerate only what needs work
 
-The service rejects empty expected results, blank manual steps, and unknown requirement references. It validates each case separately and makes at most one repair request for invalid cases. Already valid cases are retained. Repair cannot replace a known nonempty expected result with a different one. If operations remain invalid, valid manual content can survive with blocked automation; invalid manual cases are omitted with a warning. An empty final suite fails visibly.
+A sentence or code fence around the provider's JSON answer is ignored, so it does not cost a repair request. The service rejects empty expected results, blank manual steps, and unknown requirement references. It validates each case separately and makes at most one repair request for invalid cases. Already valid cases are retained. Repair cannot replace a known nonempty expected result with a different one. If operations remain invalid, valid manual content can survive with blocked automation; invalid manual cases are omitted with a warning. An empty final suite fails visibly.
 
 Use **Regenerate case** or select cases and click **Regenerate selected**. The saved requirements/context are used. Other cases keep their IDs, content, and review status. Replacements create a new revision and require action review again. Old execution results remain tied to their old revision. Selected regeneration cannot change the expected outcome; to change the behavior under test, edit the requirements and generate a new suite.
 

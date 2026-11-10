@@ -239,6 +239,7 @@ A revision is a saved version of a suite. Editing or reviewing actions can creat
 | No AI CLI is available | Install and sign in to a supported CLI, then click **Recheck local tools**. The demo can still be used without AI generation. |
 | Chromium or the runner is unavailable | Run `npx playwright install chromium` from the project directory, then recheck local tools. |
 | Generation reports that the CLI took too long | The provider exceeded its five-minute deadline. Check that the selected CLI can complete a request, reduce overly broad requirements, and retry. |
+| Generation fails with "Claude CLI reported an error" | The Claude CLI itself refused the request, for example because of sign-in or billing. Read the message, fix it in the CLI, and retry. |
 | Generation cannot inspect the target page | Confirm the server is running and the URL is accessible without login in a fresh browser session. Saved run profiles are not used by the inspector. |
 | A case has code but Run is disabled | Read the blocker message. Save or cancel the open action editor, restore suite inputs if they changed, and confirm runner readiness. |
 | Another case's buttons become disabled after Edit actions | Use **Continue editing** to return to the open editor, then save or cancel it. |
