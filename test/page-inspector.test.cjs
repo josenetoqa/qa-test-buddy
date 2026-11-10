@@ -102,7 +102,8 @@ test('every locator the inspector emits matches exactly one element in Playwrigh
   const { getLocator } = require('../lib/locator-verifier.cjs');
   const html = '<form><label for="mail">Email</label><input id="mail"><input type="password" placeholder="Password">' +
     '<label><input type="checkbox"> Remember me</label><input type="submit" value="Register">' +
-    '<input type="button" value="Clear form"><input type="reset" value="Start over"><button type="button">Help</button></form>' +
+    '<input type="button" value="Clear form"><input type="reset" value="Start over"><button type="button">Help</button>' +
+    '<label>Step 2 <input type="submit" value="Continue"></label></form>' +
     '<a href="/terms">Terms</a><div role="switch" aria-checked="false" aria-label="Show balance" tabindex="0">off</div>' +
     '<span role="checkbox" aria-checked="false" tabindex="0">Accept terms</span>' +
     '<span role="radio" aria-checked="false" tabindex="0">Monthly</span>' +
@@ -113,7 +114,7 @@ test('every locator the inspector emits matches exactly one element in Playwrigh
     await page.setContent(html);
     const { controls } = await readControls(page);
     const located = controls.filter(c => c.locator);
-    assert.equal(located.length, 12);
+    assert.equal(located.length, 13);
     for (const control of located)
       assert.equal(await getLocator(page, control.locator).count(), 1, JSON.stringify(control.locator));
   } finally { await browser.close(); }
