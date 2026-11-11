@@ -87,7 +87,7 @@ Start each case with the form reset.
 
 This is an example, not an assumption about your application. Use its actual rules and exact messages when you know them. Do not put passwords, tokens, or other secrets in requirements.
 
-Click **Generate tests** to begin. Progress and errors appear next to the button; **View progress & controls** takes you to Test review to cancel or reconnect. When generation finishes, use **Review generated cases** to continue. Generation does not run the tests. If you change the requirements, URL, or Playwright selection afterward, the previous suite cannot run against those changed inputs. Choose **Use suite inputs** to restore its saved configuration, or generate a new suite for the new configuration.
+Click **Generate tests** to begin. The Results panel is cleared as soon as generation starts; the previous run stays in history, and it is shown again only if the generation fails or is canceled. Progress and errors appear next to the button; **View progress & controls** takes you to Test review to cancel or reconnect. When generation finishes, use **Review generated cases** to continue. Generation does not run the tests. If you change the requirements, URL, or Playwright selection afterward, the previous suite cannot run against those changed inputs. Choose **Use suite inputs** to restore its saved configuration, or generate a new suite for the new configuration.
 
 ## Understand generation
 

@@ -58,7 +58,7 @@ TEST_BUDDY_DATA_DIR=/absolute/path/to/private-data npm start
 
 Configure, Test review, and Results form one page. Configuration separates requirements and output selection from optional settings. **Your setup** shows readiness, the Generate button, and progress with a link to Test review. Execution scrolls to Results. Use **Jump to case** to navigate the automation list or **Collapse code** to close previews. Selecting cases keeps your scroll position and open previews.
 
-Changing the requirements, URL, or Playwright selection blocks execution of the previous suite. **Use suite inputs** restores its saved inputs; generate again to use your changes. A failed generation never falls back to the demo. Saved suites restore their original inputs.
+Changing the requirements, URL, or Playwright selection blocks execution of the previous suite. **Use suite inputs** restores its saved inputs; generate again to use your changes. Starting a generation clears the previous run from the Results panel right away, so an old result is never shown next to a new test; the run stays in history. If the generation fails or is canceled, the previous suite and its last result are shown again. A failed generation never falls back to the demo. Saved suites restore their original inputs.
 
 ### Improve generation quality
 

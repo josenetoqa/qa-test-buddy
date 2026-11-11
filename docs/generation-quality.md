@@ -20,7 +20,7 @@ Use **Regenerate case** or select cases and click **Regenerate selected**. The s
 
 Generation shows inspection, generating, validating, repairing, and saving stages. The total deadline is five minutes, including inspection and repair. **Cancel generation** signals browser/CLI cancellation; late results are discarded. A concurrency slot remains reserved until cleanup settles. The service allows two active jobs and retains up to 100 job records in memory.
 
-The browser reconnects to a saved job after reload. Connection failure offers reconnect. Edits made after submission are preserved and keep an older suite blocked from execution. Restarting the server clears job records; the UI explains that the job is unavailable and allows a new request. A failed/canceled request retains the previous suite without presenting it as new output.
+Starting a generation clears the previous run from the Results panel; a failed or canceled generation shows the previous suite again together with its last result. The browser reconnects to a saved job after reload. Connection failure offers reconnect. Edits made after submission are preserved and keep an older suite blocked from execution. Restarting the server clears job records; the UI explains that the job is unavailable and allows a new request. A failed/canceled request retains the previous suite without presenting it as new output.
 
 ## Reuse page evidence
 

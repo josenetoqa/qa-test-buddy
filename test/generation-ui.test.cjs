@@ -543,3 +543,148 @@ test("replacement page evidence allows regeneration but changed requirements sti
     assert.deepEqual(submitted.regenerate.caseIds, ["c1"]);
   } finally { await page.close(); }
 });
+test("starting a new generation clears the previous run result, and a canceled generation brings it back", async () => {
+  const page = await browser.newPage();
+  let generationStatus = "running";
+  const previousSuite = {
+    schemaVersion: 2,
+    suiteId: "previous-suite",
+    revision: 1,
+    provider: "demo",
+    targetUrl: "https://fixture.example",
+    generationInput: {
+      requirements: "Previous requirements",
+      format: "plain",
+      frameworks: ["playwright"],
+    },
+    cases: [
+      {
+        caseId: "case-1",
+        displayId: "TC-001",
+        title: "Previous case",
+        preconditions: "Open demo",
+        steps: ["Verify result"],
+        expected: "Visible confirmation",
+        requirementRef: "demo",
+        automation: {
+          playwright: {
+            status: "ready",
+            reviewedAt: "2026-11-10",
+            operations: [{ stepId: "s1", op: "expectText", value: "Done" }],
+            code: "// fixture code",
+          },
+        },
+      },
+    ],
+  };
+  const newSuite = {
+    ...previousSuite,
+    suiteId: "new-suite",
+    provider: "codex",
+    generationInput: {
+      ...previousSuite.generationInput,
+      requirements: "New requirements",
+    },
+    cases: [{ ...previousSuite.cases[0], caseId: "case-new", title: "New case" }],
+  };
+  const previousRun = {
+    runId: "previous-run",
+    suiteId: "previous-suite",
+    revision: 1,
+    status: "passed",
+    targetUrl: previousSuite.targetUrl,
+    selectedCaseIds: ["case-1"],
+    cases: [
+      {
+        caseId: "case-1",
+        status: "passed",
+        expected: "Visible confirmation",
+        actual: "All assertions in this TC passed.",
+        steps: [],
+      },
+    ],
+    lastEventSeq: 0,
+  };
+  await page.route("**/api/**", async (route) => {
+    const request = route.request();
+    const p = new URL(request.url()).pathname;
+    let data = {};
+    if (p === "/api/capabilities")
+      data = {
+        generationJobs: true,
+        providers: [{ id: "codex", label: "Codex", available: true }],
+        runners: { playwright: { available: true } },
+      };
+    else if (p === "/api/auth/profiles") data = { profiles: [] };
+    else if (p === "/api/runs" && request.method() === "GET")
+      data = { runs: [] };
+    else if (p === "/api/runs") data = previousRun;
+    else if (p.endsWith("/events"))
+      data = { events: [], lastEventSeq: 0, snapshotRequired: false };
+    else if (p === "/api/runs/previous-run") data = previousRun;
+    else if (p === "/api/demo/suites") data = previousSuite;
+    else if (p === "/api/generations")
+      data = { generationId: "g1", status: "running", stage: "generating" };
+    else if (p.endsWith("/cancel")) {
+      generationStatus = "canceled";
+      data = { generationId: "g1", status: "canceled" };
+    } else if (p === "/api/generations/g1")
+      data = {
+        generationId: "g1",
+        status: generationStatus,
+        stage: "generating",
+        ...(generationStatus === "completed" ? { suite: newSuite } : {}),
+      };
+    else if (p.startsWith("/api/suites/")) data = previousSuite;
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify(data),
+    });
+  });
+  const runStatus = () => page.locator("#run-status").textContent();
+  const waitForRunStatus = (text) =>
+    page.waitForFunction(
+      (expected) =>
+        document.querySelector("#run-status").textContent === expected,
+      text,
+    );
+  try {
+    await page.goto(base);
+    await page.locator("#demo-button").click();
+    await page
+      .getByRole("button", { name: "Run all runnable", exact: true })
+      .click();
+    await waitForRunStatus("passed");
+    assert.match(
+      await page.locator("#coverage-summary").textContent(),
+      /1 of 1 selected cases passed/,
+    );
+
+    // A new test starts: the old result must leave the Results panel at once.
+    await page.locator("#requirements").fill("New requirements");
+    await page.locator("#generate-button").click();
+    await page.locator("#cancel-generation").waitFor();
+    assert.equal(await runStatus(), "Not run");
+    assert.equal(await page.locator("#coverage-summary").textContent(), "");
+    assert.equal(await page.locator("#run-details").locator("> *").count(), 0);
+    assert.equal(await page.locator("#run-exports").isVisible(), false);
+
+    // Cancel keeps the previous suite, so its result comes back with it.
+    await page.locator("#cancel-generation").click();
+    await page.locator("#generated-state").waitFor();
+    await waitForRunStatus("passed");
+
+    // A completed generation shows the new suite with no result yet.
+    generationStatus = "running";
+    await page.locator("#generate-button").click();
+    await page.locator("#cancel-generation").waitFor();
+    assert.equal(await runStatus(), "Not run");
+    generationStatus = "completed";
+    await page.waitForFunction(() =>
+      document.querySelector("#cases-pane")?.textContent.includes("New case"),
+    );
+    assert.equal(await runStatus(), "Not run");
+  } finally {
+    await page.close();
+  }
+});

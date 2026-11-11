@@ -566,6 +566,9 @@ form.addEventListener("submit", async (event) => {
   if (!capabilities?.generationJobs) return legacyGenerate(event);
   await startGeneration();
 });
+// The run that was on screen when a generation started. It comes back only if
+// that generation fails or is canceled, because the previous suite stays.
+let runBeforeGeneration = null;
 async function startGeneration(caseIds) {
   if (busy() || (caseIds && (!generated || inputsChanged(true) || !caseIds.length)))
     return;
@@ -587,6 +590,11 @@ async function startGeneration(caseIds) {
   generationSubmissionVersion = ++workspaceActionVersion;
   generationSubmissionInput = input;
   generating = true;
+  // A new test starts with an empty Results panel, so an old result cannot be
+  // read as belonging to the new test. The run itself stays in history.
+  runBeforeGeneration = activeRun;
+  activeRun = null;
+  paintRun();
   $("#configure-generation-feedback").textContent = "Starting generation…";
   $("#generation-details-link").hidden = false;
   $("#generation-details-link").textContent = "View progress & controls →";
@@ -665,6 +673,8 @@ function finishGeneration(job, options = {}) {
     ? "Review generated cases →" : "View progress & controls →";
   $("#generation-progress").hidden = true;
   $("#generate-button").disabled = !$("#provider").value || busy();
+  const previousRun = runBeforeGeneration;
+  runBeforeGeneration = null;
   if (job.status === "completed" && job.suite) {
     polling++;
     activeRun = null;
@@ -674,6 +684,11 @@ function finishGeneration(job, options = {}) {
     paintRun();
   } else {
     if (generated) {
+      // The previous suite is shown again, together with its last result.
+      if (previousRun && !activeRun) {
+        activeRun = previousRun;
+        paintRun();
+      }
       state("generated");
       renderCases();
     } else {
