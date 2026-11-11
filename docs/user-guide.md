@@ -91,7 +91,7 @@ Click **Generate tests** to begin. The Results panel is cleared as soon as gener
 
 ## Understand generation
 
-The [generation quality guide](generation-quality.md) covers requirement context, per-case regeneration, progress/cancel/reconnect, cached inspection, page-state capture, metrics, and benchmarks.
+After generation, the **Requirement mapping** panel lists each requirement with the cases mapped to it. The [generation quality guide](generation-quality.md) covers requirement context, per-case regeneration, progress/cancel/reconnect, cached inspection, page-state capture, metrics, and benchmarks.
 
 
 With Playwright enabled, Test Buddy first opens the target in a fresh Chromium session. It inspects a limited set of visible control metadata, including labels, placeholders, button and link names, the names of custom toggles and choices (switch, checkbox, radio, and combobox roles), input types, and form scopes. A submit, button, or reset input is named by its `value` attribute; text typed into fields is never read. It then sends the requirements and this metadata to the selected AI CLI.

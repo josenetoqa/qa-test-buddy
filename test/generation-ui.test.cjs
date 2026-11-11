@@ -688,3 +688,128 @@ test("starting a new generation clears the previous run result, and a canceled g
     await page.close();
   }
 });
+test("requirement mapping keeps the typed line breaks and shows mapped cases apart from the text", async () => {
+  const page = await browser.newPage();
+  const cases = [1, 2].map((n) => ({
+    caseId: `c${n}`,
+    displayId: `TC-00${n}`,
+    title: `Case ${n}`,
+    steps: ["Do it"],
+    expected: "Done",
+    automation: {},
+  }));
+  const suite = {
+    suiteId: "mapping-suite",
+    revision: 1,
+    provider: "codex",
+    generationInput: { requirements: "Cadastro", frameworks: [] },
+    cases,
+    quality: {
+      coverage: [
+        {
+          requirementId: "R1",
+          text: "Cadastro\n\n- Nome é obrigatório  \n\n\n- Senha e confirmação precisam ser iguais\n",
+          caseIds: ["c1", "c2"],
+        },
+        { requirementId: "R2", text: "Export contacts", caseIds: [] },
+      ],
+      uncovered: ["R2"],
+      duplicateGroups: [["c1", "c2"]],
+      warnings: ["Requirement mapping is not proof of coverage."],
+    },
+    generation: {
+      metrics: {
+        inspectionMs: 2767,
+        aiMs: 146285,
+        validationMs: 2,
+        totalMs: 149054,
+        repairCount: 1,
+        acceptedWithoutRepair: 0,
+        cacheHit: false,
+      },
+    },
+  };
+  await page.route("**/api/**", async (route) => {
+    const p = new URL(route.request().url()).pathname;
+    let data = {};
+    if (p === "/api/capabilities")
+      data = {
+        generationJobs: true,
+        providers: [{ id: "codex", label: "Codex", available: true }],
+        runners: { playwright: { available: true } },
+      };
+    else if (p === "/api/auth/profiles") data = { profiles: [] };
+    else if (p === "/api/runs") data = { runs: [] };
+    else if (p === "/api/generations")
+      data = { generationId: "g2", status: "running", stage: "generating" };
+    else if (p === "/api/generations/g2")
+      data = { generationId: "g2", status: "completed", suite };
+    else if (p.startsWith("/api/suites/")) data = suite;
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify(data),
+    });
+  });
+  try {
+    await page.goto(base);
+    await page.locator("#requirements").fill("Cadastro");
+    await page.locator("#generate-button").click();
+    await page.locator("#generated-state").waitFor();
+    const items = page.locator("#generation-quality .requirement-item");
+    assert.equal(await items.count(), 2);
+
+    // The requirement was typed as three lines, with blank lines between them,
+    // and reads as three lines with no empty gaps.
+    const first = items.nth(0);
+    assert.equal(await first.locator(".requirement-id").textContent(), "R1");
+    assert.deepEqual(
+      (await first.locator(".requirement-text").innerText()).split("\n"),
+      [
+        "Cadastro",
+        "- Nome é obrigatório",
+        "- Senha e confirmação precisam ser iguais",
+      ],
+    );
+    // When a list item wraps, its next lines are indented so items stay apart.
+    // The title line "Cadastro" is not a list item and is not indented.
+    const indents = await first
+      .locator(".requirement-line")
+      .evaluateAll((lines) =>
+        lines.map((line) => parseFloat(getComputedStyle(line).textIndent)),
+      );
+    assert.equal(indents.length, 3);
+    assert.equal(indents[0], 0);
+    assert.ok(indents[1] < 0 && indents[2] < 0, JSON.stringify(indents));
+    // Each mapped case is its own label, not the tail of the sentence.
+    assert.deepEqual(await first.locator(".case-chip").allTextContents(), [
+      "TC-001",
+      "TC-002",
+    ]);
+    // A requirement with no case says so in words.
+    const second = items.nth(1);
+    assert.equal(await second.locator(".case-chip").count(), 0);
+    assert.match(await second.textContent(), /No case mapped/);
+
+    // Metrics use plain labels and units instead of field names.
+    const metrics = await page
+      .locator("#generation-quality details")
+      .textContent();
+    for (const expected of [
+      "Page inspection",
+      "2.8 s",
+      "AI provider",
+      "2 min 26 s",
+      "Validation",
+      "2 ms",
+      "Total",
+      "2 min 29 s",
+      "Repair requests",
+      "Inspection cache",
+      "Not used",
+    ])
+      assert.ok(metrics.includes(expected), `metrics lack "${expected}"`);
+    assert.ok(!metrics.includes("aiMs"));
+  } finally {
+    await page.close();
+  }
+});

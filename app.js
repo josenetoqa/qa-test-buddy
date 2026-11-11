@@ -1769,14 +1769,27 @@ for (const [id, format] of [
   }
 })();
 
+// Milliseconds as a short duration a person can read.
+function formatDuration(ms) {
+  if (!Number.isFinite(ms)) return "—";
+  if (ms < 1000) return `${Math.round(ms)} ms`;
+  const seconds = Math.round(ms / 1000);
+  if (seconds < 60) return `${(ms / 1000).toFixed(1)} s`;
+  return `${Math.floor(seconds / 60)} min ${seconds % 60} s`;
+}
+const generationMetricRows = [
+  ["Page inspection", "inspectionMs", formatDuration],
+  ["AI provider", "aiMs", formatDuration],
+  ["Validation", "validationMs", formatDuration],
+  ["Total", "totalMs", formatDuration],
+  ["Repair requests", "repairCount", String],
+  ["Accepted without repair", "acceptedWithoutRepair", String],
+  ["Inspection cache", "cacheHit", (hit) => (hit ? "Used" : "Not used")],
+];
 function renderQuality() {
-  const caseNames = (ids) =>
-    (ids || [])
-      .map(
-        (id) =>
-          generated.cases.find((item) => item.caseId === id)?.displayId || id,
-      )
-      .join(", ");
+  const caseName = (id) =>
+    generated.cases.find((item) => item.caseId === id)?.displayId || id;
+  const caseNames = (ids) => (ids || []).map(caseName).join(", ");
   const panel = $("#generation-quality");
   panel.replaceChildren();
   const quality = generated?.quality;
@@ -1789,16 +1802,42 @@ function renderQuality() {
       "helper",
     ),
   );
-  for (const entry of quality.coverage || [])
+  // One block per requirement: its ID, its text with the line breaks the
+  // user typed, and the cases mapped to it as separate labels.
+  const list = node("ul", undefined, "requirement-list");
+  for (const entry of quality.coverage || []) {
+    const item = node("li", undefined, "requirement-item");
+    const cases = node("div", undefined, "requirement-cases");
+    if (entry.caseIds?.length) {
+      cases.append(node("span", "Covered by", "requirement-cases-label"));
+      for (const id of entry.caseIds)
+        cases.append(node("span", caseName(id), "case-chip"));
+    } else cases.append(node("span", "No case mapped", "requirement-unmapped"));
+    // Keep each typed line on its own line, without the empty gaps. A line
+    // that starts like a list item ("- ", "* ", "1. ") gets a hanging indent.
+    const text = node("div", undefined, "requirement-text");
+    for (const line of String(entry.text ?? "").split(/\r?\n/)) {
+      if (!line.trim()) continue;
+      const el = node("span", line.trim(), "requirement-line");
+      if (/^([-*•–]|\d+[.)])\s/.test(line.trim()))
+        el.classList.add("requirement-bullet");
+      text.append(el);
+    }
+    item.append(
+      node("span", entry.requirementId, "requirement-id"),
+      text,
+      cases,
+    );
+    list.append(item);
+  }
+  if (list.children.length) panel.append(list);
+  if (quality.uncovered?.length)
     panel.append(
       node(
         "p",
-        `${entry.requirementId}: ${entry.text} → ${caseNames(entry.caseIds) || "Unmapped"}`,
+        `Requirements with no mapped case: ${quality.uncovered.join(", ")}`,
+        "workspace-notice",
       ),
-    );
-  if (quality.uncovered?.length)
-    panel.append(
-      node("p", `Uncovered requirements: ${quality.uncovered.join(", ")}`),
     );
   for (const warning of [
     ...(quality.warnings || []),
@@ -1810,18 +1849,11 @@ function renderQuality() {
   const metrics = generated.generation?.metrics;
   if (metrics) {
     const details = node("details");
-    details.append(node("summary", "Generation metrics"));
-    for (const key of [
-      "inspectionMs",
-      "aiMs",
-      "validationMs",
-      "totalMs",
-      "repairCount",
-      "acceptedWithoutRepair",
-      "cacheHit",
-    ])
+    const rows = node("div", undefined, "metric-grid");
+    for (const [label, key, format] of generationMetricRows)
       if (metrics[key] !== undefined)
-        details.append(row(key, String(metrics[key])));
+        rows.append(row(label, format(metrics[key])));
+    details.append(node("summary", "Generation metrics"), rows);
     panel.append(details);
   }
 }

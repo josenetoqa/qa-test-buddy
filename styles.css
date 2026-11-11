@@ -1532,6 +1532,98 @@ h1 {
 #generation-quality:empty {
   display: none;
 }
+/* Requirement mapping: one readable block per requirement. */
+#generation-quality h3 {
+  margin: 0 0 4px;
+}
+#generation-quality > p {
+  margin: 10px 0 0;
+}
+#generation-quality > details {
+  margin-top: 14px;
+}
+.requirement-list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.requirement-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+}
+.requirement-id {
+  align-self: start;
+  padding: 3px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.requirement-text {
+  font-size: 14px;
+  line-height: 1.55;
+}
+/* One block per typed line, so a list reads as a list. */
+.requirement-line {
+  display: block;
+}
+.requirement-line + .requirement-line {
+  margin-top: 4px;
+}
+/* A wrapped list item continues under its own text, not under the dash. */
+.requirement-bullet {
+  padding-left: 0.8em;
+  text-indent: -0.8em;
+}
+.requirement-cases {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.requirement-cases-label {
+  margin-right: 2px;
+  color: var(--muted);
+}
+.case-chip {
+  padding: 2px 9px;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.12);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.requirement-unmapped {
+  color: #f0b35e;
+  font-weight: 600;
+}
+/* Generation metrics: short facts side by side instead of a tall column. */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  /* Bottom-align cells so values line up when a label wraps. */
+  align-items: end;
+  gap: 0 16px;
+  margin-top: 4px;
+}
+.metric-grid .case-row,
+.metric-grid .case-row:last-child {
+  margin: 8px 0;
+  padding-top: 0;
+  border-top: 0;
+  font-size: 14px;
+}
 
 /* Configuration: essentials first, with the next action in view. */
 .layout {

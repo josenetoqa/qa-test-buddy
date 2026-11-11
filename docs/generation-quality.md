@@ -6,7 +6,7 @@ Test Buddy now separates provider invocation, generation jobs, case validation, 
 
 Use **Optional test context** to add acceptance criteria (one per line), user role, preconditions, test data, and business rules. Each field accepts up to 4,000 characters. The service assigns `R1`, `R2`, etc. to criteria; without criteria, all free-text requirements form `R1`. It does not infer extra business rules to fill the catalog.
 
-Review the **Requirement mapping** panel after generation. Unmapped requirements are visible. Possible duplicate groups compare normalized preconditions, steps, and expected results. Similar titles alone do not establish duplication. Cases are never deleted automatically as duplicates.
+Review the **Requirement mapping** panel after generation. Each requirement is shown as its own block: its ID, its text with the line breaks you typed (empty lines are dropped), and the mapped cases as separate labels. A requirement with no case says "No case mapped", so unmapped requirements are visible. Possible duplicate groups compare normalized preconditions, steps, and expected results. Similar titles alone do not establish duplication. Cases are never deleted automatically as duplicates.
 
 A mapped requirement is not verified coverage. You still need to check whether each expected result follows from the requirements and whether its assertions actually prove that outcome. The generator can use text, exact text, visibility, URL, value, and count assertions. Unsupported interactions or missing evidence should remain blocked.
 
@@ -44,7 +44,7 @@ Snapshots contain bounded visible control metadata and setup instructions—not 
 
 ## Measure improvements
 
-The generation panel records inspection time, provider time, validation time, total time, repair count, cases accepted without repair, and cache use. Millisecond values can be zero for very short stages. `acceptedWithoutRepair` measures structural acceptance, not cases accepted by a human without edits.
+The generation panel records inspection time, provider time, validation time, total time, repair count, cases accepted without repair, and cache use. Times are shown as durations, for example `2.8 s` or `2 min 26 s`. Millisecond values can be zero for very short stages. `acceptedWithoutRepair` measures structural acceptance, not cases accepted by a human without edits.
 
 Run the deterministic benchmark:
 
