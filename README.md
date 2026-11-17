@@ -4,7 +4,7 @@
 
 Test Buddy is a local QA workspace that connects manual test design with browser automation. Enter your requirements and target URL, generate cases with your configured Codex or Claude CLI, review each automation mapping, and inspect what actually happened.
 
-![Test Buddy workspace with independent Playwright results](docs/images/workspace.png)
+![Test Buddy's dark workspace configured to test a contact form with Playwright](docs/images/workspace.png)
 
 **New here?** Read the [detailed user guide](docs/user-guide.md) for setup, the full workflow, exports, authentication, and troubleshooting.
 
@@ -63,6 +63,8 @@ Changing the requirements, URL, or Playwright selection blocks execution of the 
 ### Improve generation quality
 
 Open **Optional test context** to add one acceptance criterion per line, a user role, preconditions, test data, and business rules. Each criterion gets a requirement ID. Review the resulting mapping, uncovered requirements, duplicate warnings, and generation metrics; these are review aids, not proof of correct coverage.
+
+![Requirement mapping with a multiline example, case labels, and sample generation metrics](docs/images/requirement-mapping.png)
 
 Generation shows progress and supports cancellation/reconnection. It preserves accepted cases during one targeted repair. **Regenerate case** or **Regenerate selected** creates a new revision while preserving other cases. Expected outcomes cannot be changed by selected regeneration; update requirements and generate a new suite when the behavior changes.
 
